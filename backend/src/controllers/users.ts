@@ -20,7 +20,7 @@ interface SignUpBody {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const signUp: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (req, res, next) => {
+export const signUpController: RequestHandler<unknown, unknown, SignUpBody, unknown> = async (req, res, next) => {
   const username = req.body.username
   const email = req.body.email
   const passwordRaw = req.body.password
@@ -64,7 +64,7 @@ interface LoginBody {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
+export const loginController: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
   const username = req.body.username
   const password = req.body.password
 
@@ -93,7 +93,7 @@ export const login: RequestHandler<unknown, unknown, LoginBody, unknown> = async
   }
 }
 
-export const logout: RequestHandler = (req, res, next) => {
+export const logoutController: RequestHandler = (req, res, next) => {
   req.session.destroy(error => {
     if (error !== null) {
       next(error)

@@ -4,13 +4,12 @@ import { requiresAuth } from '../middleware/auth'
 
 const router = express.Router()
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 router.get('/', requiresAuth, UserController.getAuthenticatedUser)
 
-router.post('/signup', UserController.signUp)
+router.post('/signup', UserController.signUpController)
 
-router.post('/login', UserController.login)
+router.post('/login', UserController.loginController)
 
-router.post('/logout', UserController.logout)
+router.post('/logout', UserController.logoutController)
 
 export default router
