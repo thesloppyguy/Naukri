@@ -6,8 +6,8 @@ const router = express.Router()
 
 router.post('/search', requiresAuth, SearchController.searchController)
 
-router.post('/profiles', SearchController.profilesController)
+router.post('/profiles', requiresAuth, SearchController.profilesController)
 
-router.post('/jobs', SearchController.jobsController)
+router.post('/jobs', requiresAuth, SearchController.jobsController)
 
 export default router

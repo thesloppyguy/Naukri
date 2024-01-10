@@ -1,10 +1,12 @@
 import { type RequestHandler } from 'express'
+import clinet from '../os-client'
+import { createNLPQuery, createGeneralQuery } from '../utils/createSearchQuery'
 
 interface SearchBody {
   query?: string
-  nlp?: string
+  nlp: boolean
   incluedkeywords?: string[]
-  musthave?: boolean
+  musthave: boolean
   excludekeywords?: string[]
   ugtype?: string
   ugmajor?: string
@@ -17,25 +19,35 @@ interface SearchBody {
   maxexp?: number
   gender?: string
   jobcode?: string
-  global?: boolean
+  global: boolean
 }
 
 export const searchController: RequestHandler<unknown, unknown, SearchBody, unknown> = (req, res, next) => {
-  console.log(req.body)
+  let query = null
+  if (req.body.nlp) {
+    query = createNLPQuery(req.body)
+  }
+  query = createGeneralQuery(req.body)
+  clinet.search({
+    index: 'resumes',
+    body: query
+  }).then((response) => {
+    return res.status(200).json(response.body)
+  }).catch((error) => { next(error) })
 }
 
-interface ProfilesBody {
-  index?: string
+export const profilesController: RequestHandler = (req, res, next) => {
+  clinet.count({
+    index: req.body.index
+  }).then((response) => {
+    return res.status(200).json(response.body.count)
+  }).catch((error) => { next(error) })
 }
 
-export const profilesController: RequestHandler<unknown, unknown, ProfilesBody, unknown> = (req, res, next) => {
-  console.log(req.body)
-}
-
-interface JobsBody {
-  index?: string
-}
-
-export const jobsController: RequestHandler<unknown, unknown, JobsBody, unknown> = (req, res, next) => {
-  console.log(req.body)
+export const jobsController: RequestHandler = (req, res, next) => {
+  clinet.count({
+    index: req.body.index
+  }).then((response) => {
+    return res.status(200).json(response.body.count)
+  }).catch((error) => { next(error) })
 }

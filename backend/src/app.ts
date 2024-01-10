@@ -1,19 +1,31 @@
+import 'dotenv/config'
 import express, { type Express } from 'express'
-import dotenv from 'dotenv'
+import opensearchRoutes from './routes/opensearch'
+import userRoutes from './routes/users'
+import maintainerRoutes from './routes/maintainer'
+import session from 'express-session'
+import env from './utils/validateEnv'
+import MongoStore from 'connect-mongo'
 import cors from 'cors'
 
-dotenv.config()
-
 const app: Express = express()
-const port = 3000
 
 app.use(express.json())
 app.use(cors())
-app.get('/', (req, res) => {
-  console.log(req)
-  return res.status(200).send('Welcome to Bookstore!!!')
-})
+app.use(session({
+  secret: env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    maxAge: 60 * 60 * 1000
+  },
+  rolling: true,
+  store: MongoStore.create({
+    mongoUrl: env.MONGO_CONNECTION_STRING
+  })
+}))
 
-app.listen(port, () => {
-  console.log(`[server]: Server is running at http://localhost:${port}`)
-})
+app.use('/api/', userRoutes)
+app.use('/api/', opensearchRoutes)
+app.use('/api/', maintainerRoutes)
+export default app
