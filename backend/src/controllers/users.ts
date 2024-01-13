@@ -48,24 +48,22 @@ export const registerController: RequestHandler<unknown, unknown, RegisterBody, 
 
 interface ActivateBody {
   id: string
-  username: string
   password: string
 }
 
 export const activateController: RequestHandler<unknown, unknown, ActivateBody, unknown> = async (req, res, next) => {
   const passwordRaw = req.body.password
-  const username = req.body.username
   const id = req.body.id
 
   try {
-    if ((username == null) || (passwordRaw == null)) {
+    if ((passwordRaw == null)) {
       throw createHttpError(400, 'Parameter missing')
     }
     if ((id == null)) {
       throw createHttpError(400, 'Invalid Invite Link')
     }
     const passwordHashed = await bcrypt.hash(passwordRaw, 10)
-    const result = await UserModel.updateOne({ _id: id }, { $set: { username ,password: passwordHashed } })
+    const result = await UserModel.updateOne({ _id: id }, { $set: { password: passwordHashed } })
     if (result.modifiedCount === 0) {
       throw createHttpError(400, 'User not found')
     }
@@ -107,27 +105,27 @@ export const resetPasswordController: RequestHandler<unknown, unknown, ResetPass
 
 interface LoginBody {
   orgId?: string
-  username?: string
+  email?: string
   password?: string | Buffer
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const loginController: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
-  const username = req.body.username
+  const email = req.body.email
   const password = req.body.password
   const name = req.body.orgId
   try {
-    console.log(username, password, name);
+    console.log(email, password, name);
     const org = await OrgnisationModel.findOne({ name }).select('+name').exec()
 
     if (org === null) {
       throw createHttpError(401, 'Invalid Organization')
     }
 
-    if ((username == null) || (password == null)) {
+    if ((email == null) || (password == null)) {
       throw createHttpError(400, 'Parameters missing')
     }
-    const user = await UserModel.findOne({ username, organization: org._id }).select('+password +email').exec()
+    const user = await UserModel.findOne({ email, organization: org._id }).select('+password +email').exec()
 
     if (user === null) {
       throw createHttpError(401, 'Invalid credentials')

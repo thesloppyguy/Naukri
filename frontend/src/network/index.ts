@@ -27,7 +27,7 @@ export interface RegisterBody {
     organizationName: string;
     organizationEmail: string;
     url?: string;
-  }
+}
 
 export async function signUp(details: RegisterBody): Promise<User> {
     const response = await fetchData("/api/register",
@@ -43,7 +43,7 @@ export async function signUp(details: RegisterBody): Promise<User> {
 
 export interface LoginBody {
     orgId: string
-    username: string,
+    email: string,
     password: string,
 }
 
@@ -61,7 +61,6 @@ export async function login(credentials: LoginBody): Promise<User> {
 
 export interface ActivateBody {
     id: string
-    username: string
     password: string
 }
 

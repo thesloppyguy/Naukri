@@ -1,34 +1,35 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import ActivatePage from "./pages/ActivatePage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import DashboardPage from "./pages/DashboardPage";
-import UsersPage from "./pages/UsersPage";
-import SearchPage from "./pages/SearchPage";
-import JobsPage from "./pages/JobsPage";
-import MaintainerPage from "./pages/MaintainerPage";
-import Page404 from "./pages/Page404";
+import UsersPage from "./pages/DashboardPage/UsersPage";
+import SearchPage from "./pages/DashboardPage/SearchPage";
+import JobsPage from "./pages/DashboardPage/JobsPage";
+import MaintainerPage from "./pages/DashboardPage/MaintainerPage";
+import OverviewPage from "./pages/DashboardPage/OverviewPage";
 import PreLoginPage from "./pages/PreLoginPage";
 import SettingsPage from "./pages/SettingsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import App from "./pages";
+
 const Router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
       {
-        path: "/login",
+        path: "user",
         element: <PreLoginPage />,
         children: [
           {
-            path: "register",
-            element: <RegisterPage />,
-          },
-          {
             path: "",
             element: <LoginPage />,
+          },
+          {
+            path: "register",
+            element: <RegisterPage />,
           },
           {
             path: "activate/:token",
@@ -49,8 +50,8 @@ const Router = createBrowserRouter([
         element: <DashboardPage />,
         children: [
           {
-            path: "users",
-            element: <UsersPage />,
+            path: "overview",
+            element: <OverviewPage />,
           },
           {
             path: "search",
@@ -61,6 +62,10 @@ const Router = createBrowserRouter([
             element: <JobsPage />,
           },
           {
+            path: "users",
+            element: <UsersPage />,
+          },
+          {
             path: "maintainer",
             element: <MaintainerPage />,
           },
@@ -69,14 +74,6 @@ const Router = createBrowserRouter([
             element: <SettingsPage />,
           },
         ],
-      },
-      {
-        path: "404",
-        element: <Page404 />,
-      },
-      {
-        path: "*",
-        element: <Navigate to="/404" replace />,
       },
     ],
   },

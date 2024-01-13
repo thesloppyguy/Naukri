@@ -16,6 +16,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import { useRouter } from "../hooks/useRouter";
 import Logo from "../molecules/Logo";
 import Iconify from "../molecules/Iconify";
+import { bgGradient } from "../theme/css";
 
 interface FormData {
   organizationName: string;
@@ -24,6 +25,7 @@ interface FormData {
 }
 
 export default function RegisterView() {
+  const theme = useTheme();
   const router = useRouter();
   const [isRegistered, setRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -33,34 +35,10 @@ export default function RegisterView() {
     url: "",
   });
 
-  const handleClick = () => {
-    if (isRegistered) {
-      router.push("/login");
-    }
-    console.log("Unable to Register");
-  };
-
   const handleRegister = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch("", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (response.ok) {
-        console.log("Registration successful");
-      } else {
-        console.error("Registration failed");
-      }
-      router.push("/login");
-    } catch (error) {
-      console.error("An error occurred", error);
-    } finally {
-      setLoading(false);
-    }
+    console.log(formData);
+    setLoading(true);
+    setLoading(false);
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -117,49 +95,18 @@ export default function RegisterView() {
   );
 
   return (
-    <Box
-      sx={{
-        background: `linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url(./assets/overlay_4.jpg)`,
-        backgroundSize: "cover",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "center center",
-        height: 1,
-      }}
-    >
-      <Logo
-        sx={{
-          position: "fixed",
-          top: { xs: 16, md: 24 },
-          left: { xs: 16, md: 24 },
-        }}
-      />
-      <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-        <Card
-          sx={{
-            p: 5,
-            width: 1,
-            maxWidth: 420,
-          }}
-        >
-          <Typography variant="h4" textAlign={"center"}>
-            Register to Lokibots
-          </Typography>
+    <>
+      <Typography variant="h4" textAlign={"center"}>
+        Register to Lokibots
+      </Typography>
 
-          <Typography
-            variant="body2"
-            sx={{ mt: 2, mb: 5 }}
-            textAlign={"center"}
-          >
-            Already have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }} onClick={handleClick}>
-              Login
-            </Link>
-          </Typography>
-          <Divider sx={{ my: 3 }}></Divider>
-
-          {renderForm}
-        </Card>
-      </Stack>
-    </Box>
+      <Typography variant="body2" sx={{ mt: 2, mb: 5 }} textAlign={"center"}>
+        Already have an account?
+        <Link variant="subtitle2" sx={{ ml: 0.5 }} href="/user">
+          Login
+        </Link>
+      </Typography>
+      {renderForm}
+    </>
   );
 }

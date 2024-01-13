@@ -1,9 +1,13 @@
 import { Outlet, useLocation } from "react-router-dom";
-import React from "react";
 import { Helmet } from "react-helmet-async";
 import Box from "@mui/material/Box";
 import Logo from "../../molecules/Logo";
+import { bgGradient } from "../../theme/css";
+import { alpha, useTheme } from "@mui/material/styles";
+import Stack from "@mui/material/Stack";
+import Card from "@mui/material/Card";
 const PreLoginPage = () => {
+  const theme = useTheme();
   const location = useLocation();
   const getTitle = () => {
     if (location.pathname.includes("activate")) {
@@ -12,10 +16,12 @@ const PreLoginPage = () => {
       return "Forgot Password";
     } else if (location.pathname.includes("reset-password")) {
       return "Reset Password";
-    } else if (location.pathname.includes("signup")) {
-      return "Signup";
+    } else if (location.pathname.includes("register")) {
+      return "Register";
     } else if (location.pathname.includes("login")) {
       return "Login";
+    } else {
+      return "Register";
     }
   };
   return (
@@ -25,11 +31,11 @@ const PreLoginPage = () => {
       </Helmet>
       <Box
         sx={{
-          background: `linear-gradient(to bottom, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), url(./assets/overlay_4.jpg)`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center center",
-          height: 1,
+          ...bgGradient({
+            color: alpha(theme.palette.background.default, 0.9),
+            imgUrl: "/assets/background/overlay_4.jpg",
+          }),
+          height: "100vh",
         }}
       >
         <Logo
@@ -39,7 +45,17 @@ const PreLoginPage = () => {
             left: { xs: 16, md: 24 },
           }}
         />
-        <Outlet />
+        <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
+          <Card
+            sx={{
+              p: 5,
+              width: 1,
+              maxWidth: 360,
+            }}
+          >
+            <Outlet />
+          </Card>
+        </Stack>
       </Box>
     </>
   );

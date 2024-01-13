@@ -8,7 +8,6 @@ import {
 import { useScrollTop } from "../hooks/useScrollTop";
 import React, { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import "src/global.css";
 
 const WrappedPage = () => {
   const navigate = useNavigate();
@@ -25,10 +24,8 @@ const WrappedPage = () => {
       if (!location.pathname.includes("dashboard")) {
         redirect("/dashboard");
       }
-    } else {
-      if (!location.pathname.includes("login")) {
-        redirect("/login");
-      }
+    } else if (!location.pathname.includes("user")) {
+      redirect("/user");
     }
   };
 

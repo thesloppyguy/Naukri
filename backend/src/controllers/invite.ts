@@ -37,7 +37,6 @@ export const orgRequestController: RequestHandler = async (req, res, next) => {
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const orgInviteController: RequestHandler<unknown, unknown, OrganizationInvite, unknown> = async (req, res, next) => {
-  const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email
   const organizationName = req.body.organizationName
@@ -45,7 +44,6 @@ export const orgInviteController: RequestHandler<unknown, unknown, OrganizationI
   try {
     const org = await OrgnisationModel.findOne({ name: organizationName }).exec()
     const newUser = await UserModel.create({
-      username,
       email,
       password,
       role: 'Admin',
@@ -64,13 +62,11 @@ export const orgInviteController: RequestHandler<unknown, unknown, OrganizationI
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const maintainerInviteController: RequestHandler<unknown, unknown, MaintainerInvite, unknown> = async (req, res, next) => {
-  const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email
   try {
     const org = await OrgnisationModel.findOne({ name: 'Lokibots' }).exec()
     const newUser = await UserModel.create({
-      username,
       email,
       password,
       role: 'Maintainer',
@@ -89,7 +85,6 @@ export const maintainerInviteController: RequestHandler<unknown, unknown, Mainta
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const userInviteController: RequestHandler<unknown, unknown, UserInvite, unknown> = async (req, res, next) => {
-  const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email
   const role = req.body.role
@@ -97,7 +92,6 @@ export const userInviteController: RequestHandler<unknown, unknown, UserInvite, 
   try {
     const org = await OrgnisationModel.findOne({ name: organizationName }).exec()
     const newUser = await UserModel.create({
-      username,
       email,
       password,
       role,

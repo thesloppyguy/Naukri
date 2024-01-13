@@ -3,12 +3,27 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import RouterLink from "../util/RouterLink";
-import { Header } from "../organisms/Header";
+import Logo from "../molecules/Logo";
 
 const NoPageFoundView = () => {
   return (
     <>
-      <Header />
+      <Box
+        component="header"
+        sx={{
+          top: 0,
+          left: 0,
+          width: 1,
+          lineHeight: 0,
+          position: "fixed",
+          p: (theme) => ({
+            xs: theme.spacing(3, 3, 0),
+            sm: theme.spacing(5, 5, 0),
+          }),
+        }}
+      >
+        <Logo />
+      </Box>
       <Container>
         <Box
           sx={{

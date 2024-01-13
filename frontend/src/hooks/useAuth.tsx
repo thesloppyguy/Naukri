@@ -1,7 +1,5 @@
-import React from "react";
-
 const useAuth = () => {
-  return <div>useAuth</div>;
+  return true;
 };
 
 export default useAuth;
