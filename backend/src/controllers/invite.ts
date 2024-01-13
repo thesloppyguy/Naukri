@@ -36,7 +36,7 @@ export const orgRequestController: RequestHandler = async (req, res, next) => {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const orgInviteController: RequestHandler<unknown, any, OrganizationInvite, unknown> = async (req, res, next) => {
+export const orgInviteController: RequestHandler<unknown, unknown, OrganizationInvite, unknown> = async (req, res, next) => {
   const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email
@@ -63,7 +63,7 @@ export const orgInviteController: RequestHandler<unknown, any, OrganizationInvit
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const maintainerInviteController: RequestHandler<unknown, any, MaintainerInvite, unknown> = async (req, res, next) => {
+export const maintainerInviteController: RequestHandler<unknown, unknown, MaintainerInvite, unknown> = async (req, res, next) => {
   const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email
@@ -88,7 +88,7 @@ export const maintainerInviteController: RequestHandler<unknown, any, Maintainer
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const userInviteController: RequestHandler<unknown, any, UserInvite, unknown> = async (req, res, next) => {
+export const userInviteController: RequestHandler<unknown, unknown, UserInvite, unknown> = async (req, res, next) => {
   const username = crypto.randomUUID()
   const password = crypto.randomUUID()
   const email = req.body.email

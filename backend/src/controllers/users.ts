@@ -45,16 +45,16 @@ export const registerController: RequestHandler<unknown, unknown, RegisterBody, 
     next(error)
   }
 }
-interface ResetPasswordBody {
+
+interface ActivateBody {
   id: string
-  username?: string
-  password?: string
+  username: string
+  password: string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-misused-promises
-export const resetPasswordController: RequestHandler<unknown, unknown, ResetPasswordBody, unknown> = async (req, res, next) => {
-  const username = req.body.username
+export const activateController: RequestHandler<unknown, unknown, ActivateBody, unknown> = async (req, res, next) => {
   const passwordRaw = req.body.password
+  const username = req.body.username
   const id = req.body.id
 
   try {
@@ -65,7 +65,36 @@ export const resetPasswordController: RequestHandler<unknown, unknown, ResetPass
       throw createHttpError(400, 'Invalid Invite Link')
     }
     const passwordHashed = await bcrypt.hash(passwordRaw, 10)
-    const result = await UserModel.updateOne({ _id: id }, { $set: { username, password: passwordHashed } })
+    const result = await UserModel.updateOne({ _id: id }, { $set: { username ,password: passwordHashed } })
+    if (result.modifiedCount === 0) {
+      throw createHttpError(400, 'User not found')
+    }
+    const currentUser = await UserModel.findById(id).exec()
+    res.status(201).json(currentUser)
+  } catch (error) {
+    next(error)
+  }
+}
+
+interface ResetPasswordBody {
+  id: string
+  password?: string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-misused-promises
+export const resetPasswordController: RequestHandler<unknown, unknown, ResetPasswordBody, unknown> = async (req, res, next) => {
+  const passwordRaw = req.body.password
+  const id = req.body.id
+
+  try {
+    if ((passwordRaw == null)) {
+      throw createHttpError(400, 'Parameter missing')
+    }
+    if ((id == null)) {
+      throw createHttpError(400, 'Invalid Invite Link')
+    }
+    const passwordHashed = await bcrypt.hash(passwordRaw, 10)
+    const result = await UserModel.updateOne({ _id: id }, { $set: { password: passwordHashed } })
     if (result.modifiedCount === 0) {
       throw createHttpError(400, 'User not found')
     }
@@ -88,6 +117,7 @@ export const loginController: RequestHandler<unknown, unknown, LoginBody, unknow
   const password = req.body.password
   const name = req.body.orgId
   try {
+    console.log(username, password, name);
     const org = await OrgnisationModel.findOne({ name }).select('+name').exec()
 
     if (org === null) {
@@ -103,7 +133,7 @@ export const loginController: RequestHandler<unknown, unknown, LoginBody, unknow
       throw createHttpError(401, 'Invalid credentials')
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password as string)
+    const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
       throw createHttpError(401, 'Invalid credentials')

@@ -1,10 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
-import "./index.css";
 import { createTheme, ThemeProvider } from "@mui/material";
+import { HelmetProvider } from "react-helmet-async";
+import { RouterProvider } from "react-router-dom";
 import reportWebVitals from "./reportWebVitals";
-import router from "./router";
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import Router from "./router";
+import "./index.css";
 
 const theme = createTheme({
   palette: {
@@ -22,11 +23,15 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-  <ThemeProvider theme={theme}>
-    <React.StrictMode>
-      <RouterProvider router={router} />
-    </React.StrictMode>
-  </ThemeProvider>
+  <HelmetProvider>
+    <Suspense>
+      <ThemeProvider theme={theme}>
+        <React.StrictMode>
+          <RouterProvider router={Router} />
+        </React.StrictMode>
+      </ThemeProvider>
+    </Suspense>
+  </HelmetProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

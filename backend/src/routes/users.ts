@@ -11,6 +11,8 @@ router.post('/register', UserController.registerController)
 
 router.post('/reset', UserController.resetPasswordController)
 
+router.post('/activate', UserController.activateController)
+
 router.post('/login', UserController.loginController)
 
 router.post('/logout', UserController.logoutController)

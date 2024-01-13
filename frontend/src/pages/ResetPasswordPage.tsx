@@ -1,7 +1,11 @@
-import React from "react";
+import ResetPasswordView from '../templates/ResetPasswordView';
+
 
 const ResetPasswordPage = () => {
-  return <div>ResetPasswordPage</div>;
+  return (<>
+  <title> Register </title>
+  <ResetPasswordView />
+  </>)
 };
 
 export default ResetPasswordPage;

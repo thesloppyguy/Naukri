@@ -1,10 +1,13 @@
-import RegisterView from "../sections/RegisterView";
+import { Helmet } from "react-helmet-async";
+import RegisterView from "../templates/RegisterView";
 import React from "react";
 
 const RegisterPage = () => {
   return (
     <>
-      <title> Login | Minimal UI </title>
+      <Helmet>
+        <title> Register </title>
+      </Helmet>
       <RegisterView />
     </>
   );

@@ -1,7 +1,12 @@
-import React from "react";
+import LoginView from "../templates/LoginView";
 
 const LoginPage = () => {
-  return <div>LoginPage</div>;
+  return (
+    <>
+      <title> Login </title>
+      <LoginView />
+    </>
+  );
 };
 
 export default LoginPage;
