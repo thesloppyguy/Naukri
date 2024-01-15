@@ -7,7 +7,6 @@ import IconButton from "@mui/material/IconButton";
 import Iconify from "./Iconify";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import Notification from "./Notification";
 import Profile from "./Profile";
 import { HEADER, NAV } from "../constants";
 import { bgBlur } from "../theme/css";
@@ -48,7 +47,6 @@ const Header = ({ onOpenNav }: any) => {
         <Box sx={{ flexGrow: 1 }} />
 
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Notification />
           <Profile />
         </Stack>
       </Toolbar>

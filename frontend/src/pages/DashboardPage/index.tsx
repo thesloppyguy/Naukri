@@ -3,13 +3,14 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../../molecules/Header";
 import Nav from "../../molecules/Nav";
+import DashboardContent from "../../molecules/DashboardContent";
 
 const DashboadPage = () => {
   const [openNav, setOpenNav] = useState(false);
 
   return (
     <>
-      <Header onOpenNav={() => setOpenNav(true)} />
+      {/* <Header onOpenNav={() => setOpenNav(true)} /> */}
       <Box
         sx={{
           minHeight: 1,
@@ -18,7 +19,9 @@ const DashboadPage = () => {
         }}
       >
         <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} />
-        <Outlet />
+        <DashboardContent>
+          <Outlet />
+        </DashboardContent>
       </Box>
     </>
   );
