@@ -18,23 +18,23 @@ import { useState } from "react";
 import CandidateSearch from "../../molecules/CandidateSearch";
 
 const candidates = [
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
-  // {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
+  {},
   {
     country: "India",
     education: [
@@ -103,45 +103,24 @@ const candidates = [
   },
 ];
 
-// interface SearchFormFields {
-//   keywords: string;
-//   must: boolean;
-//   notKeywords: string;
-//   gender: "male" | "female" | "any";
-//   location: string;
-//   expMax: number;
-//   expMin: number;
-//   department: string;
-//   industry: string;
-//   currentCompany: string;
-//   currentDesignation: string;
-//   ug: boolean;
-//   ugCourse: string;
-//   pg: boolean;
-//   pgCourse: string;
-//   pd: boolean;
-//   udCourse: string;
-// }
-
 const baseform = {
-  keywords: "",
+  keywords: [],
   must: false,
   notKeywords: "",
   gender: "any",
   location: "",
   expMax: 0,
   expMin: 0,
-  department: "",
-  industry: "",
+  department: "any",
+  industry: "any",
   currentCompany: "",
   currentDesignation: "",
-  ug: false,
-  ugCourse: "",
-  pg: false,
-  pgCourse: "",
-  pd: false,
-  udCourse: "",
+  ugCourse: "any",
+  pgCourse: "any",
+  pdCourse: "any",
+  jobcode: "",
 };
+
 const SearchView = () => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState({});
@@ -158,38 +137,50 @@ const SearchView = () => {
     <>
       <Container sx={{ height: "100vh" }}>
         <CandidateSearch formData={formData} setFormData={setFormData} />
-        <div className="my-5">
-          <Stack
-            direction="row"
-            sx={{ justifyContent: "space-between", alignItems: "center" }}
-          >
-            <Stack direction="row">
-              <Button onClick={handleClear}> Clear</Button>
-              <Button onClick={handleSubmit}> Search</Button>
-            </Stack>
-            <Stack direction="row">
-              <Pagination count={10} size="small" />
-            </Stack>
+
+        <Stack
+          direction="row"
+          sx={{
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Stack direction="row">
+            <Button onClick={handleClear}> Clear</Button>
+            <Button onClick={handleSubmit}> Search</Button>
           </Stack>
-        </div>
-        {candidateList.length > 0 ? (
-          <Grid container spacing={3}>
-            {candidates.map((candidate: any) => (
-              <Grid key={candidate.id} xs={12} sm={6} md={3}>
-                <CandidateCard
-                  candidate={candidate}
-                  onClick={() => {
-                    setOpen(true);
-                    setSelected(candidate);
-                    console.log("clicked");
+          <Stack direction="row">
+            <Pagination count={10} size="small" />
+          </Stack>
+        </Stack>
+        <Stack>
+          {candidateList.length > 0 ? (
+            <Grid container>
+              {candidates.map((candidate: any) => (
+                <Grid
+                  key={candidate.id}
+                  xs={12}
+                  sm={6}
+                  md={3}
+                  sx={{
+                    padding: "2px",
                   }}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        ) : (
-          <></>
-        )}
+                >
+                  <CandidateCard
+                    candidate={candidate}
+                    onClick={() => {
+                      setOpen(true);
+                      setSelected(candidate);
+                      console.log("clicked");
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          ) : (
+            <></>
+          )}
+        </Stack>
       </Container>
     </>
   );

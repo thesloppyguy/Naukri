@@ -24,7 +24,7 @@ export default function CandidateCard({ candidate }: any) {
           minHeight: "264px",
           padding: "10px",
           borderStyle: "solid",
-          borderWidth: "5px",
+          borderWidth: "1px",
           borderRadius: "25px",
         }}
         onClick={() => setOpen(!open)}
