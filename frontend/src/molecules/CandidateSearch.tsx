@@ -7,7 +7,7 @@ import {
   PgDegree,
   PhdDegree,
 } from "../constants";
-
+import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
 const CandidateSearch = ({ formData, setFormData }: any) => {
   const handleFormChange = (e: any) => {
     const { name, value } = e.target;
@@ -18,189 +18,248 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
   };
 
   return (
-    <Grid container spacing={1}>
-      <Grid item xs={12} md={6}>
-        <TextField
-          name="keywords"
-          label="Keywords"
-          onChange={handleFormChange}
-          fullWidth
-          size="small"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <TextField
-          name="notKeywords"
-          label="Not Keywords"
-          onChange={handleFormChange}
-          fullWidth
-          size="small"
-        />
-      </Grid>
-      <Grid item xs={12} md={3} sx={{ alignItems: "center" }}>
-        <Checkbox
-          size="small"
-          name="must"
-          onChange={handleFormChange}
-          sx={{ inputProps: { "aria-label": "Must include all keywords" } }}
-          defaultChecked={formData.must}
-        />
-        <span>Must have all keywords</span>
-      </Grid>
-      <Grid item xs={12} md={2}>
-        <FormControl fullWidth size="small">
-          <InputLabel>Gender</InputLabel>
-          <Select
-            name="gender"
-            value={formData.gender}
-            label="Gender"
+    <>
+      <Grid container spacing={1}>
+        <Grid item xs={12} md={6}>
+          <TextField
+            name="keywords"
+            label="Keywords"
+            value={formData.keywords}
             onChange={handleFormChange}
-          >
-            <MenuItem value={"any"}>Any Gender</MenuItem>
-            <MenuItem value={"male"}>Male</MenuItem>
-            <MenuItem value={"female"}>Female</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            name="notKeywords"
+            label="Not Keywords"
+            value={formData.notKeywords}
+            onChange={handleFormChange}
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} md={3} sx={{ alignItems: "center" }}>
+          <Checkbox
+            size="small"
+            name="must"
+            onChange={handleFormChange}
+            sx={{ inputProps: { "aria-label": "Must include all keywords" } }}
+            defaultChecked={formData.must}
+          />
+          <span>Must have all keywords</span>
+        </Grid>
+        <Grid item xs={12} md={2}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Gender</InputLabel>
+            <Select
+              name="gender"
+              value={formData.gender}
+              label="Gender"
+              onChange={handleFormChange}
+            >
+              <MenuItem value={"any"}>Any Gender</MenuItem>
+              <MenuItem value={"male"}>Male</MenuItem>
+              <MenuItem value={"female"}>Female</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
 
-      <Grid item xs={12} md={2}>
-        <TextField
-          size="small"
-          name="expMin"
-          label="Min Experience"
-          type="number"
-          onChange={handleFormChange}
-          fullWidth
-        />
-      </Grid>
+        <Grid item xs={12} md={2}>
+          <TextField
+            size="small"
+            name="expMin"
+            label="Min Experience"
+            type="number"
+            value={formData.expMin}
+            onChange={handleFormChange}
+            fullWidth
+          />
+        </Grid>
 
-      <Grid item xs={12} md={2}>
-        <TextField
-          size="small"
-          name="expMax"
-          label="Max Experience"
-          type="number"
-          onChange={handleFormChange}
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <TextField
-          name="location"
-          label="Location"
-          onChange={handleFormChange}
-          fullWidth
-          size="small"
-        />
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <FormControl fullWidth size="small">
-          <InputLabel>Department</InputLabel>
-          <Select
-            name="department"
-            value={formData.department}
-            label="Department"
+        <Grid item xs={12} md={2}>
+          <TextField
+            size="small"
+            name="expMax"
+            label="Max Experience"
+            type="number"
+            value={formData.expMax}
             onChange={handleFormChange}
-          >
-            <MenuItem value={"any"}>Any Department</MenuItem>
-            {department.map((item) => (
-              <MenuItem value={item}>{item}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} md={6}>
-        <FormControl fullWidth size="small">
-          <InputLabel>Industry</InputLabel>
-          <Select
-            name="industry"
-            value={formData.industry}
-            label="Industry"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            name="location"
+            label="Location"
+            value={formData.location}
             onChange={handleFormChange}
-          >
-            <MenuItem value={"any"}>Any Department</MenuItem>
-            {industries.map((item) => (
-              <MenuItem value={item}>{item}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </Grid>
+            fullWidth
+            size="small"
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Department</InputLabel>
+            <Select
+              name="department"
+              value={formData.department}
+              label="Department"
+              onChange={handleFormChange}
+            >
+              <MenuItem value={"any"}>Any Department</MenuItem>
+              {department.map((item) => (
+                <MenuItem value={item}>{item}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <FormControl fullWidth size="small">
+            <InputLabel>Industry</InputLabel>
+            <Select
+              name="industry"
+              value={formData.industry}
+              label="Industry"
+              onChange={handleFormChange}
+            >
+              <MenuItem value={"any"}>Any Department</MenuItem>
+              {industries.map((item) => (
+                <MenuItem value={item}>{item}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
-      <Grid item xs={12} md={6}>
-        <TextField
-          name="currentCompany"
-          label="Current Company"
-          onChange={handleFormChange}
-          fullWidth
-          size="small"
-        />
-      </Grid>
+        <Grid item xs={12} md={6}>
+          <TextField
+            name="currentCompany"
+            label="Current Company"
+            value={formData.currentCompany}
+            onChange={handleFormChange}
+            fullWidth
+            size="small"
+          />
+        </Grid>
 
-      <Grid item xs={12} md={6}>
-        <TextField
-          size="small"
-          name="currentDesignation"
-          onChange={handleFormChange}
-          label="Current Designation"
-          fullWidth
-        />
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth size="small">
-          <InputLabel>UG Qualification</InputLabel>
-          <Select
-            name="ugCourse"
-            value={formData.ugCourse}
-            label="UG Qualification"
+        <Grid item xs={12} md={6}>
+          <TextField
+            size="small"
+            name="currentDesignation"
+            value={formData.currentDesignation}
             onChange={handleFormChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
+            label="Current Designation"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth size="small">
+            <InputLabel>UG Qualification</InputLabel>
+            <Select
+              native
+              name="ugCourse"
+              value={formData.ugCourse}
+              label="Ug Qualification"
+              onChange={handleFormChange}
+            >
+              <option aria-label="Not required" value="no">
+                Not required
+              </option>
+              <option aria-label="Any UG" value="any">
+                Any UG
+              </option>
+              {UgDegree.map((items) => (
+                <optgroup label={items.Degree} key={items.Degree}>
+                  <option value={items.Degree} key={items.Degree}>
+                    Any {items.Degree}
+                  </option>
+                  {items.Majors?.map((values) => (
+                    <option value={values} key={values}>
+                      {values}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth size="small">
+            <InputLabel>PG Qualification</InputLabel>
+            <Select
+              native
+              name="pgCourse"
+              value={formData.pgCourse}
+              label="PG Qualification"
+              onChange={handleFormChange}
+            >
+              <option aria-label="Not required" value="no">
+                Not required
+              </option>
+              <option aria-label="Any PG" value="any">
+                Any PG
+              </option>
+              {PgDegree.map((items) => (
+                <optgroup label={items.Degree} key={items.Degree}>
+                  <option value={items.Degree} key={items.Degree}>
+                    Any {items.Degree}
+                  </option>
+                  {items.Majors?.map((values) => (
+                    <option value={values} key={values}>
+                      {values}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth size="small">
-          <InputLabel>PG Qualification</InputLabel>
-          <Select
-            name="pgCourse"
-            value={formData.pgCourse}
-            label="PG Qualification"
+        <Grid item xs={12} md={3}>
+          <FormControl fullWidth size="small">
+            <InputLabel>PhD Qualification</InputLabel>
+            <Select
+              native
+              name="pdCourse"
+              value={formData.pdCourse}
+              label="PhD Qualification"
+              onChange={handleFormChange}
+              placeholder="Select Degree"
+            >
+              <option aria-label="Not required" value="no">
+                Not required
+              </option>
+              <option aria-label="Any PhD" value="any">
+                Any PhD
+              </option>
+              {PhdDegree.map((items) => (
+                <optgroup label={items.major} key={items.major}>
+                  <option value={items.major} key={items.major}>
+                    Any {items.major}
+                  </option>
+                  {items.specializations?.map((values) => (
+                    <option value={values} key={values}>
+                      {values}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            size="small"
+            name="jobcode"
+            value={formData.jobcode}
             onChange={handleFormChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
+            label="Jobcode Global"
+            fullWidth
+          />
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={3}>
-        <FormControl fullWidth size="small">
-          <InputLabel>PhD Qualification</InputLabel>
-          <Select
-            name="pdCourse"
-            value={formData.pdCourse}
-            label="PhD Qualification"
-            onChange={handleFormChange}
-          >
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-      <Grid item xs={12} md={3}>
-        <TextField
-          size="small"
-          name="jobcode"
-          onChange={handleFormChange}
-          label="Jobcode"
-          fullWidth
-        />
-      </Grid>
-    </Grid>
+    </>
   );
 };
 

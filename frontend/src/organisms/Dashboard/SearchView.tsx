@@ -14,7 +14,7 @@ import {
   TextField,
   alpha,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CandidateSearch from "../../molecules/CandidateSearch";
 
 const candidates = [
@@ -104,20 +104,20 @@ const candidates = [
 ];
 
 const baseform = {
-  keywords: [],
+  keywords: "",
   must: false,
   notKeywords: "",
   gender: "any",
   location: "",
-  expMax: 0,
+  expMax: 100,
   expMin: 0,
   department: "any",
   industry: "any",
   currentCompany: "",
   currentDesignation: "",
-  ugCourse: "any",
-  pgCourse: "any",
-  pdCourse: "any",
+  ugCourse: "no",
+  pgCourse: "no",
+  pdCourse: "no",
   jobcode: "",
 };
 
@@ -127,11 +127,27 @@ const SearchView = () => {
   const [formData, setFormData] = useState(baseform);
   const [candidateList, setCandidateList] = useState([1]);
 
-  const handleClear = () => {
-    setFormData(baseform);
-  };
   const handleSubmit = () => {
     console.log(formData);
+  };
+  const handleClear = () => {
+    setFormData({
+      keywords: "",
+      notKeywords: "",
+      must: false,
+      gender: "any",
+      expMin: 0,
+      expMax: 100,
+      location: "",
+      department: "any",
+      industry: "any",
+      currentCompany: "",
+      currentDesignation: "",
+      ugCourse: "no",
+      pgCourse: "no",
+      pdCourse: "no",
+      jobcode: "",
+    });
   };
   return (
     <>
