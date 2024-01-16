@@ -2,26 +2,26 @@ import { type RequestHandler } from 'express'
 import clinet from '../os-client'
 import { createNLPQuery, createGeneralQuery } from '../utils/createSearchQuery'
 
-interface SearchBody {
-  incluedkeywords?: string[]
-  musthave: boolean
-  excludekeywords?: string[]
-  ugtype?: string
-  ugmajor?: string
-  pgtype?: string
-  pgmajor?: string
-  phdtype?: string
-  phdmajor?: string
-  location?: string
-  minexp?: number
-  maxexp?: number
-  gender?: string
-  jobcode?: string
-  global: boolean
+export interface SearchBody {
+  keywords: string[]
+  must: string
+  notKeywords: string[]
+  gender: string
+  location: string
+  expMax: string
+  expMin: string
+  industry: string
+  department: string
+  currentCompany: string
+  currentDesignation: string
+  ugCourse: string,
+  pgCourse: string,
+  pdCourse: string,
+  jobcode: string
+  page: number
 }
-
-interface NlpBody {
-  query?: string
+export interface NlpBody {
+  query: string
 }
 
 export const searchFilterController: RequestHandler<unknown, unknown, SearchBody, unknown> = (req, res, next) => {
@@ -44,18 +44,40 @@ export const searchNlpController: RequestHandler<unknown, unknown, NlpBody, unkn
   }).catch((error) => { next(error) })
 }
 
-export const profilesController: RequestHandler = (req, res, next) => {
+export const countController: RequestHandler = (req, res, next) => {
   clinet.count({
     index: req.body.index
   }).then((response) => {
     return res.status(200).json(response.body.count)
-  }).catch((error) => { next(error) })
+  }).catch((error) => {
+    next(error);
+  })
 }
 
 export const jobsController: RequestHandler = (req, res, next) => {
-  clinet.count({
-    index: req.body.index
+  clinet.search({
+    index: 'jobs',
+    body: {
+      "query": {
+        "match_all": {}
+      }
+    }
   }).then((response) => {
-    return res.status(200).json(response.body.count)
+    return res.status(200).json(response.body)
+  }).catch((error) => { next(error) })
+}
+
+export const jobcodeController: RequestHandler = (req, res, next) => {
+  clinet.search({
+    index: 'jobs',
+    body: {
+      "query": {
+        "bool": {
+          "must": [{ "match_phrase": { "job_id": req.body.jobcode } }]
+        }
+      },
+    }
+  }).then((response) => {
+    return res.status(200).json(response.body)
   }).catch((error) => { next(error) })
 }

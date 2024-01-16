@@ -104,7 +104,7 @@ const candidates = [
   },
 ];
 
-const baseform = {
+const searchBody = {
   keywords: [],
   must: false,
   notKeywords: [],
@@ -123,14 +123,14 @@ const baseform = {
   page: 1,
 };
 
-const nlpfrom = {
+const nlpBody = {
   query: "",
 };
 
 const SearchView = () => {
   const [open, setOpen] = useState(true);
   const [selected, setSelected] = useState({});
-  const [formData, setFormData] = useState(baseform);
+  const [formData, setFormData] = useState(searchBody);
   const [candidateList, setCandidateList] = useState([1]);
 
   const handleSubmit = () => {
@@ -146,24 +146,7 @@ const SearchView = () => {
   };
 
   const handleClear = () => {
-    setFormData({
-      keywords: [],
-      notKeywords: [],
-      must: false,
-      gender: "any",
-      expMin: 0,
-      expMax: 100,
-      location: "",
-      department: "any",
-      industry: "any",
-      currentCompany: "",
-      currentDesignation: "",
-      ugCourse: "no",
-      pgCourse: "no",
-      pdCourse: "no",
-      jobcode: "",
-      page: 1,
-    });
+    setFormData(searchBody);
   };
   return (
     <>
