@@ -3,8 +3,6 @@ import clinet from '../os-client'
 import { createNLPQuery, createGeneralQuery } from '../utils/createSearchQuery'
 
 interface SearchBody {
-  query?: string
-  nlp: boolean
   incluedkeywords?: string[]
   musthave: boolean
   excludekeywords?: string[]
@@ -22,12 +20,22 @@ interface SearchBody {
   global: boolean
 }
 
-export const searchController: RequestHandler<unknown, unknown, SearchBody, unknown> = (req, res, next) => {
-  let query = null
-  if (req.body.nlp) {
-    query = createNLPQuery(req.body)
-  }
-  query = createGeneralQuery(req.body)
+interface NlpBody {
+  query?: string
+}
+
+export const searchFilterController: RequestHandler<unknown, unknown, SearchBody, unknown> = (req, res, next) => {
+  const query = createGeneralQuery(req.body)
+  clinet.search({
+    index: 'resumes',
+    body: query
+  }).then((response) => {
+    return res.status(200).json(response.body)
+  }).catch((error) => { next(error) })
+}
+
+export const searchNlpController: RequestHandler<unknown, unknown, NlpBody, unknown> = (req, res, next) => {
+  const query = createNLPQuery(req.body)
   clinet.search({
     index: 'resumes',
     body: query

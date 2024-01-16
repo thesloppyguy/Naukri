@@ -4,7 +4,9 @@ import { requiresAuth } from '../middleware/auth'
 
 const router = express.Router()
 
-router.post('/search', requiresAuth, SearchController.searchController)
+router.post('/search/filter', requiresAuth, SearchController.searchFilterController)
+
+router.post('/search/nlp', requiresAuth, SearchController.searchNlpController)
 
 router.post('/profiles', requiresAuth, SearchController.profilesController)
 

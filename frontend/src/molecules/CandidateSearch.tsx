@@ -7,7 +7,8 @@ import {
   PgDegree,
   PhdDegree,
 } from "../constants";
-import { Unstable_NumberInput as NumberInput } from "@mui/base/Unstable_NumberInput";
+import { TagsInput } from "react-tag-input-component";
+
 const CandidateSearch = ({ formData, setFormData }: any) => {
   const handleFormChange = (e: any) => {
     const { name, value } = e.target;
@@ -17,27 +18,37 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
     }));
   };
 
+  const handleKeywordChange = (e: string[]) => {
+    setFormData((prevData: any) => ({
+      ...prevData,
+      keywords: e,
+    }));
+  };
+
+  const handleNotKeywordChange = (e: string[]) => {
+    setFormData((prevData: any) => ({
+      ...prevData,
+      notKeywords: e,
+    }));
+  };
+
   return (
     <>
       <Grid container spacing={1}>
         <Grid item xs={12} md={6}>
-          <TextField
-            name="keywords"
-            label="Keywords"
+          <TagsInput
             value={formData.keywords}
-            onChange={handleFormChange}
-            fullWidth
-            size="small"
+            onChange={handleKeywordChange}
+            name="keywords"
+            placeHolder="Keywords"
           />
         </Grid>
         <Grid item xs={12} md={6}>
-          <TextField
-            name="notKeywords"
-            label="Not Keywords"
+          <TagsInput
             value={formData.notKeywords}
-            onChange={handleFormChange}
-            fullWidth
-            size="small"
+            onChange={handleNotKeywordChange}
+            name="notKeywords"
+            placeHolder="Not Keywords"
           />
         </Grid>
         <Grid item xs={12} md={3} sx={{ alignItems: "center" }}>

@@ -11,6 +11,7 @@ import {
   Checkbox,
   MenuItem,
   Select,
+  Switch,
   TextField,
   alpha,
 } from "@mui/material";
@@ -104,9 +105,9 @@ const candidates = [
 ];
 
 const baseform = {
-  keywords: "",
+  keywords: [],
   must: false,
-  notKeywords: "",
+  notKeywords: [],
   gender: "any",
   location: "",
   expMax: 100,
@@ -119,6 +120,11 @@ const baseform = {
   pgCourse: "no",
   pdCourse: "no",
   jobcode: "",
+  page: 1,
+};
+
+const nlpfrom = {
+  query: "",
 };
 
 const SearchView = () => {
@@ -130,10 +136,19 @@ const SearchView = () => {
   const handleSubmit = () => {
     console.log(formData);
   };
+
+  const handlePageChange = (event: any, value: any) => {
+    console.log(event);
+    setFormData((prevData: any) => ({
+      ...prevData,
+      page: value,
+    }));
+  };
+
   const handleClear = () => {
     setFormData({
-      keywords: "",
-      notKeywords: "",
+      keywords: [],
+      notKeywords: [],
       must: false,
       gender: "any",
       expMin: 0,
@@ -147,6 +162,7 @@ const SearchView = () => {
       pgCourse: "no",
       pdCourse: "no",
       jobcode: "",
+      page: 1,
     });
   };
   return (
@@ -165,8 +181,24 @@ const SearchView = () => {
             <Button onClick={handleClear}> Clear</Button>
             <Button onClick={handleSubmit}> Search</Button>
           </Stack>
+          <Stack
+            direction="row"
+            sx={{
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            NLP
+            <Switch defaultChecked />
+            FILTER
+          </Stack>
           <Stack direction="row">
-            <Pagination count={10} size="small" />
+            <Pagination
+              count={10}
+              size="small"
+              defaultPage={formData.page}
+              onChange={handlePageChange}
+            />
           </Stack>
         </Stack>
         <Stack>
