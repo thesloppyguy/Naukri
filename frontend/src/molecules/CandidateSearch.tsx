@@ -1,4 +1,4 @@
-import { FormControl, Grid, InputLabel } from "@mui/material";
+import { Box, FormControl, Grid, InputLabel, Typography } from "@mui/material";
 import { Checkbox, MenuItem, Select, TextField } from "@mui/material";
 import {
   industries,
@@ -33,7 +33,15 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
   };
 
   return (
-    <>
+    <Box
+      sx={{
+        borderStyle: "solid",
+        borderWidth: "1px",
+        borderRadius: "25px",
+        padding: "15px",
+        bgcolor: "#ffffff",
+      }}
+    >
       <Grid container spacing={1}>
         <Grid item xs={12} md={6}>
           <TagsInput
@@ -51,24 +59,33 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
             placeHolder="Not Keywords"
           />
         </Grid>
-        <Grid item xs={12} md={3} sx={{ alignItems: "center" }}>
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{ alignItems: "center", display: "flex" }}
+        >
           <Checkbox
             size="small"
             name="must"
             onChange={handleFormChange}
-            sx={{ inputProps: { "aria-label": "Must include all keywords" } }}
+            color="primary"
+            sx={{
+              inputProps: { "aria-label": "Must include all keywords" },
+            }}
             defaultChecked={formData.must}
           />
-          <span>Must have all keywords</span>
+          <Typography>Must have all keywords</Typography>
         </Grid>
         <Grid item xs={12} md={2}>
           <FormControl fullWidth size="small">
-            <InputLabel>Gender</InputLabel>
+            <InputLabel sx={{ color: "black" }}>Gender</InputLabel>
             <Select
               name="gender"
               value={formData.gender}
               label="Gender"
               onChange={handleFormChange}
+              sx={{ bgcolor: "white" }}
             >
               <MenuItem value={"any"}>Any Gender</MenuItem>
               <MenuItem value={"male"}>Male</MenuItem>
@@ -270,7 +287,7 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
           />
         </Grid>
       </Grid>
-    </>
+    </Box>
   );
 };
 

@@ -27,7 +27,7 @@ const Nav = ({ openNav, onCloseNav }: any) => {
     name: "Jaydon Frankie",
     email: "demo@minimals.cc",
     role: "maintainer",
-    photoURL: "/assets/images/avatars/avatar_25.jpg",
+    photoURL: "/assets/avatars/base_avatar.png",
   };
   const renderContent = (
     <Scrollbar
@@ -50,16 +50,14 @@ const Nav = ({ openNav, onCloseNav }: any) => {
           display: "flex",
           borderRadius: 1.5,
           alignItems: "center",
-          bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
         }}
       >
         <Box sx={{ ml: 2 }}>
-          <Avatar src={account.photoURL} alt="photoURL" />
-          <Typography variant="subtitle2">{account.name}</Typography>
-
-          <Typography variant="body2" sx={{ color: "text.secondary" }}>
-            {account.role}
-          </Typography>
+          <Stack direction="row" sx={{ alignItems: "center" }}>
+            <Avatar src={account.photoURL} alt="photoURL" />
+            <Typography variant="subtitle2">{account.name}</Typography>
+          </Stack>
         </Box>
       </Box>
       <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
@@ -98,7 +96,7 @@ const Nav = ({ openNav, onCloseNav }: any) => {
             height: 1,
             position: "fixed",
             width: NAV.WIDTH,
-            borderRight: (theme) => `dashed 1px ${theme.palette.divider}`,
+            borderRight: (theme) => `solid 2px ${theme.palette.divider}`,
           }}
         >
           {renderContent}

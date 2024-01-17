@@ -14,9 +14,13 @@ import {
   Switch,
   TextField,
   alpha,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import CandidateSearch from "../../molecules/CandidateSearch";
+import purple from "@mui/material/colors/purple";
+import { SubmitButton } from "../../atoms/SubmitButton";
+import NlpSearch from "../../molecules/NlpSearch";
 
 const candidates = [
   {},
@@ -128,9 +132,12 @@ const nlpBody = {
 };
 
 const SearchView = () => {
+  const theme = useTheme();
   const [open, setOpen] = useState(true);
+  const [check, setCheck] = useState(true);
   const [selected, setSelected] = useState({});
   const [formData, setFormData] = useState(searchBody);
+  const [nlpData, setNlpData] = useState(nlpBody);
   const [candidateList, setCandidateList] = useState([1]);
 
   const handleSubmit = () => {
@@ -148,11 +155,20 @@ const SearchView = () => {
   const handleClear = () => {
     setFormData(searchBody);
   };
+
+  const handleSwitch = () => {
+    setCheck(!check);
+  };
   return (
     <>
       <Container sx={{ height: "100vh" }}>
-        <CandidateSearch formData={formData} setFormData={setFormData} />
-
+        <Box sx={{ minHeight: "270px" }}>
+          {check ? (
+            <CandidateSearch formData={formData} setFormData={setFormData} />
+          ) : (
+            <NlpSearch formData={nlpData} setFormData={setNlpData} />
+          )}
+        </Box>
         <Stack
           direction="row"
           sx={{
@@ -160,9 +176,9 @@ const SearchView = () => {
             alignItems: "center",
           }}
         >
-          <Stack direction="row">
-            <Button onClick={handleClear}> Clear</Button>
-            <Button onClick={handleSubmit}> Search</Button>
+          <Stack direction="row" sx={{ padding: "10px", gap: "10px" }}>
+            <SubmitButton onClick={handleClear}> Clear</SubmitButton>
+            <SubmitButton onClick={handleSubmit}> Search</SubmitButton>
           </Stack>
           <Stack
             direction="row"
@@ -172,7 +188,7 @@ const SearchView = () => {
             }}
           >
             NLP
-            <Switch defaultChecked />
+            <Switch checked={check} onChange={handleSwitch} />
             FILTER
           </Stack>
           <Stack direction="row">

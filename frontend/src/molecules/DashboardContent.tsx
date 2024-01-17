@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { useResponsive } from "../hooks/useResponsive";
 
 import { NAV, HEADER } from "../constants";
+import { alpha } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -23,6 +24,7 @@ export default function DashboardContent({ children, sx, ...other }: any) {
         flexDirection: "column",
         px: 2,
         pt: `${HEADER.H_MOBILE + SPACING}px`,
+        bgcolor: alpha("#f5d49a", 0.08),
         ...(lgUp && {
           px: 2,
           pt: `${HEADER.H_DESKTOP + SPACING}px`,
