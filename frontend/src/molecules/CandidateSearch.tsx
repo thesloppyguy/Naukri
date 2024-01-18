@@ -24,6 +24,12 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
       must: !prevData.must,
     }));
   };
+  const handleGlobalChange = (e: any) => {
+    setFormData((prevData: any) => ({
+      ...prevData,
+      global: !prevData.must,
+    }));
+  };
   const handleKeywordChange = (e: string[]) => {
     setFormData((prevData: any) => ({
       ...prevData,
@@ -302,12 +308,12 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
           <Checkbox
             size="small"
             name="must"
-            onChange={handleMustChange}
+            onChange={handleGlobalChange}
             color="primary"
             sx={{
-              inputProps: { "aria-label": "Must include all keywords" },
+              inputProps: { "aria-label": "Global Search" },
             }}
-            defaultChecked
+            defaultChecked={formData.global}
           />
           <Typography>Global Search</Typography>
         </Grid>

@@ -26,7 +26,7 @@ const JobDetailsCard = ({ job, setSelected }: any) => {
           {`Title: ${job.job_code_title}`}
         </Typography>
         <Typography variant="h6" color="textPrimary" gutterBottom>
-          {`Job Code: ${job.job_code}`}
+          {`Job Code: ${job.job_id}`}
         </Typography>
         <Typography variant="body1" color="textPrimary" gutterBottom>
           {`Description: ${job.description}`}

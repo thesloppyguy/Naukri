@@ -16,7 +16,7 @@ const getDescription = async (code: string) => {
     }
   })
   if (response.body.hits.total.value > 0) {
-    return response.body.hits.hits[0]._source.dec
+    return response.body.hits.hits[0]._source.description
   }
 }
 
@@ -155,17 +155,19 @@ const createGeneralQuery = async (params: SearchBody) => {
         "passage_embedding": {
           "query_text": description,
           "model_id": "xBArqIwBnT_YCGy5xijZ",
-          "k": 50,
+          "k": 100,
           "filter": {
             "bool": {
-              "must": [{ "match_phrase": { "job_id": "LNT/AS/801615" } }],
-              "should": [],
-              "must_not": []
+              "must": must,
+              "should": should,
+              "must_not": mustNot
             }
           }
         }
       }
-    }
+    },
+    "size": 16,
+    "from": (params.page - 1) * 16,
   }
 
 }

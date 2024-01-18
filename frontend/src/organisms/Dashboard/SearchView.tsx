@@ -29,6 +29,7 @@ const searchBody = {
   pgCourse: "no",
   pdCourse: "no",
   jobcode: "",
+  global: false,
 };
 
 const nlpBody = {
