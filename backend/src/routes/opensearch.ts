@@ -9,8 +9,6 @@ router.post('/nlp/', SearchController.searchNlpController)
 
 router.post('/count/', SearchController.countController)
 
-router.get('/jobs/', SearchController.jobsController)
-
 router.post("/jobs/", SearchController.jobcodeController)
 
 export default router

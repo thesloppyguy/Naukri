@@ -9,7 +9,7 @@ import { SubmitButton } from "../../atoms/SubmitButton";
 import NlpSearch from "../../molecules/NlpSearch";
 import axios from "axios";
 import { SearchForm, NLPForm } from "../../interfaces/search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import CandidateDetailsCard from "../../molecules/CandidateDetailsCard";
 
@@ -36,6 +36,7 @@ const nlpBody = {
 };
 
 const SearchView = () => {
+  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<any>();
   const theme = useTheme();
   const [check, setCheck] = useState(true);
@@ -92,28 +93,21 @@ const SearchView = () => {
   const handleSwitch = () => {
     setCheck(!check);
   };
+  useEffect(() => {
+    handleSubmit();
+  }, [page]);
 
   return (
     <>
-      <Container sx={{ height: "100vh" }}>
-        <Box sx={{ minHeight: "270px" }}>
-          {check ? (
-            <CandidateSearch formData={formData} setFormData={setFormData} />
-          ) : (
-            <NlpSearch formData={nlpData} setFormData={setNlpData} />
-          )}
-        </Box>
-        <Stack
-          direction="row"
-          sx={{
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <Stack direction="row" sx={{ padding: "10px", gap: "10px" }}>
-            <SubmitButton onClick={handleClear}> Clear</SubmitButton>
-            <SubmitButton onClick={handleSubmit}> Search</SubmitButton>
-          </Stack>
+      {!selected ? (
+        <Container sx={{ height: "100vh" }}>
+          <Box sx={{ minHeight: "270px" }}>
+            {check ? (
+              <CandidateSearch formData={formData} setFormData={setFormData} />
+            ) : (
+              <NlpSearch formData={nlpData} setFormData={setNlpData} />
+            )}
+          </Box>
           <Stack
             direction="row"
             sx={{
@@ -121,72 +115,68 @@ const SearchView = () => {
               alignItems: "center",
             }}
           >
-            NLP
-            <Switch checked={check} onChange={handleSwitch} />
-            FILTER
-          </Stack>
-          <Stack direction="row">
-            <Pagination
-              count={10}
-              size="small"
-              defaultPage={page}
-              onChange={handlePageChange}
-            />
-          </Stack>
-        </Stack>
-        <Stack>
-          {candidateList.length > 0 ? (
-            <Grid container>
-              {candidateList.map((candidate: any) => (
-                <Grid
-                  key={candidate._source.employee_id}
-                  xs={12}
-                  sm={6}
-                  md={3}
-                  sx={{
-                    padding: "2px",
-                  }}
-                >
-                  <motion.div onClick={() => setSelected(candidate)}>
-                    <CandidateCard
-                      candidate={candidate}
-                      onClick={() => {
-                        setSelected(candidate);
-                      }}
-                    />
-                  </motion.div>
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <></>
-          )}
-        </Stack>
-      </Container>
-      <Container
-        sx={{
-          position: "fixed",
-          zIndex: "tooltip",
-          top: "30%",
-          left: "50%",
-          width: "50em",
-          height: "50em",
-          marginTop: "-9em",
-          marginLeft: "-15em",
-        }}
-      >
-        <AnimatePresence>
-          {selected && (
-            <Paper>
-              <CandidateDetailsCard
-                candidate={selected._source}
-                selected={selected}
-                setSelected={setSelected}
+            <Stack direction="row" sx={{ padding: "10px", gap: "10px" }}>
+              <SubmitButton onClick={handleClear}> Clear</SubmitButton>
+              <SubmitButton onClick={handleSubmit}> Search</SubmitButton>
+            </Stack>
+            <Stack
+              direction="row"
+              sx={{
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              NLP
+              <Switch checked={check} onChange={handleSwitch} />
+              FILTER
+            </Stack>
+            <Stack direction="row">
+              <Pagination
+                count={10}
+                size="small"
+                defaultPage={page}
+                onChange={handlePageChange}
               />
-            </Paper>
-          )}
-        </AnimatePresence>
-      </Container>
+            </Stack>
+          </Stack>
+          <Stack>
+            {candidateList.length > 0 ? (
+              <Grid container>
+                {candidateList.map((candidate: any) => (
+                  <Grid
+                    key={candidate._source.employee_id}
+                    xs={12}
+                    sm={6}
+                    md={3}
+                    sx={{
+                      padding: "10px",
+                    }}
+                  >
+                    <motion.div onClick={() => setSelected(candidate)}>
+                      <CandidateCard candidate={candidate._source} />
+                    </motion.div>
+                  </Grid>
+                ))}
+              </Grid>
+            ) : (
+              <></>
+            )}
+          </Stack>
+        </Container>
+      ) : (
+        <Container sx={{ height: "100vh" }}>
+          <AnimatePresence>
+            {selected && (
+              <Paper>
+                <CandidateDetailsCard
+                  candidate={selected._source}
+                  setSelected={setSelected}
+                />
+              </Paper>
+            )}
+          </AnimatePresence>
+        </Container>
+      )}
     </>
   );
 };

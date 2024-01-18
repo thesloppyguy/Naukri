@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import InputBase from "@mui/material/InputBase";
 import SearchIcon from "@mui/icons-material/Search";
+import { SubmitButton } from "../atoms/SubmitButton";
 
 const Search = styled("div")(({ theme }) => ({
   position: "relative",
@@ -47,7 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-export default function SearchBar({ field, setField }: any) {
+export default function SearchBar({ field, setField, onSubmit }: any) {
   const handleSearch = (e: any) => {
     const { name, value } = e.target;
     setField(value);
@@ -55,7 +56,7 @@ export default function SearchBar({ field, setField }: any) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static" sx={{ borderRadius: "10px", boxShadow: 3 }}>
-        <Toolbar>
+        <Toolbar sx={{ justifyContent: "space-between" }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon />
@@ -67,6 +68,9 @@ export default function SearchBar({ field, setField }: any) {
               inputProps={{ "aria-label": "search" }}
             />
           </Search>
+          <SubmitButton onClick={onSubmit} sx={{ paddingX: "20px" }}>
+            Search
+          </SubmitButton>
         </Toolbar>
       </AppBar>
     </Box>

@@ -8,19 +8,16 @@ import { useTheme } from "@mui/material/styles";
 
 import { useRouter } from "../hooks/useRouter";
 import { SubmitButton } from "../atoms/SubmitButton";
+import { RegisterForm } from "../interfaces/network";
 import axios from "axios";
-interface FormData {
-  organizationName: string;
-  organizationEmail: string;
-  url?: string;
-}
+import Divider from "@mui/material/Divider";
 
 export default function RegisterView() {
   const theme = useTheme();
   const router = useRouter();
-  const [isRegistered, setRegistered] = useState(false);
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<RegisterForm>({
     organizationName: "",
     organizationEmail: "",
     url: "",
@@ -29,8 +26,16 @@ export default function RegisterView() {
   const handleRegister = async () => {
     console.log(formData);
     setLoading(true);
-    axios.post("", formData);
-    setLoading(false);
+    axios
+      .post("http://localhost:4000/api/register", formData)
+      .then((response) => {
+        router.push("/user");
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (!error.response.data.error.includes("unknown"))
+          setError(error.response.data.error);
+      });
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,6 +103,13 @@ export default function RegisterView() {
           Login
         </Link>
       </Typography>
+      {error ? (
+        <Divider sx={{ color: "red", py: "2px" }} textAlign={"center"}>
+          {error}
+        </Divider>
+      ) : (
+        <Divider></Divider>
+      )}
       {renderForm}
     </>
   );

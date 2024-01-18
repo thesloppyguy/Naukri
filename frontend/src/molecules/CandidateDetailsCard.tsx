@@ -4,13 +4,14 @@ import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
-import { Button, Stack, alpha, useTheme } from "@mui/material";
+import { Button, Grid, Stack, alpha, useTheme } from "@mui/material";
+import { SubmitButton } from "../atoms/SubmitButton";
 
-const CandidateDetailsCard = ({ candidate, selected, setSelected }: any) => {
+const CandidateDetailsCard = ({ candidate, setSelected }: any) => {
   const theme = useTheme();
+  const resumeLines = candidate.review_body.split("\n");
   return (
     <Card
-      elevation={24}
       sx={{
         margin: "auto",
         alignContent: "center",
@@ -20,87 +21,152 @@ const CandidateDetailsCard = ({ candidate, selected, setSelected }: any) => {
         overflowY: "scroll",
       }}
     >
-      <Stack direction="row" sx={{ position: "absolute", right: "5%" }}>
-        <Button onClick={() => setSelected(null)}>X</Button>
-      </Stack>
-      <CardContent>
-        <Typography variant="h4" gutterBottom>
+      <Stack
+        direction="row"
+        sx={{
+          right: "5%",
+          paddingX: "20px",
+          alignContent: "center",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h4" gutterBottom sx={{ textAlign: "center" }}>
           {`${candidate.title} ${candidate.first_name} ${candidate.last_name}`}
         </Typography>
-        <Typography variant="h6" color="textPrimary" gutterBottom>
-          {`Job Code/Title: ${candidate.job_code_title}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Email: ${candidate.email}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Phone: ${candidate.phone}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Gender: ${candidate.gender}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Date of Birth: ${candidate.date_of_birth}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Age: ${candidate.candidate_age}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Languages: ${candidate.languages}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Location: ${candidate.location}`}
-        </Typography>
-      </CardContent>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Education:
-        </Typography>
-        <List>
-          {candidate.education.map((edu: any, index: any) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={`${edu.degree_name} in ${edu.major}`}
-                secondary={`${edu.institute_type} - ${edu.institute_name}, ${edu.institute_location}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Work Experience:
-        </Typography>
-        <List>
-          {candidate.work_experience.map((exp: any, index: any) => (
-            <ListItem key={index}>
-              <ListItemText
-                primary={exp.job_title}
-                secondary={`${exp.employer} - ${exp.domain}`}
-              />
-            </ListItem>
-          ))}
-        </List>
-      </CardContent>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Skills:
-        </Typography>
-        <Typography variant="body1" color="textPrimary">
-          {candidate.skills}
-        </Typography>
-      </CardContent>
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          Addresses:
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Current Address: ${candidate.current_address}`}
-        </Typography>
-        <Typography variant="body1" color="textPrimary" gutterBottom>
-          {`Permanent Address: ${candidate.permanent_address}`}
-        </Typography>
-      </CardContent>
+        <Button onClick={() => setSelected(null)}>X</Button>
+      </Stack>
+      <Grid container>
+        <Grid
+          xs={6}
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Stack
+            sx={{ bgcolor: "#ffffff", padding: "10px", borderRadius: "20px" }}
+          >
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Email: ${candidate.email}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Phone: ${candidate.phone}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Gender: ${candidate.gender}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Date of Birth: ${candidate.date_of_birth}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Age: ${candidate.candidate_age}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Languages: ${candidate.languages}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Location: ${candidate.location}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Current Address: ${candidate.current_address}`}
+            </Typography>
+            <Typography variant="body1" color="textPrimary" gutterBottom>
+              {`Permanent Address: ${candidate.permanent_address}`}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid
+          xs={6}
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Stack
+            sx={{ bgcolor: "#ffffff", padding: "10px", borderRadius: "20px" }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Education:
+            </Typography>
+            <List>
+              {candidate.education.map((edu: any, index: any) => (
+                <ListItem key={index}>
+                  <ListItemText
+                    primary={`${edu.degree_name} in ${edu.major}`}
+                    secondary={`${edu.institute_type} - ${edu.institute_name}, ${edu.institute_location}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Stack>
+        </Grid>
+        <Grid
+          xs={6}
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Stack
+            sx={{ bgcolor: "#ffffff", padding: "10px", borderRadius: "20px" }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Skills:
+            </Typography>
+            <Typography variant="body1" color="textPrimary">
+              {candidate.skills}
+            </Typography>
+          </Stack>
+        </Grid>
+        <Grid
+          xs={6}
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Stack
+            sx={{ bgcolor: "#ffffff", padding: "10px", borderRadius: "20px" }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Work Experience:
+            </Typography>
+            <List>
+              {candidate.work_experience.map((exp: any, index: any) => (
+                <ListItem key={index}>
+                  <ListItemText
+                    primary={exp.job_title}
+                    secondary={`${exp.employer} - ${exp.domain}`}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </Stack>
+        </Grid>
+        <Grid
+          xs={12}
+          sx={{
+            padding: "10px",
+          }}
+        >
+          <Stack
+            sx={{ bgcolor: "#ffffff", padding: "20px", borderRadius: "20px" }}
+          >
+            <Stack direction="row" sx={{ justifyContent: "space-between" }}>
+              <Typography variant="h6" gutterBottom>
+                Resume:
+              </Typography>
+              <SubmitButton
+                onSubmit={() => console.log(candidate.review_body)}
+                sx={{ paddingX: "10px" }}
+              >
+                Download
+              </SubmitButton>
+            </Stack>
+            <Typography>
+              {resumeLines.map((line: string) => (
+                <p>{line}</p>
+              ))}
+            </Typography>
+          </Stack>
+        </Grid>
+      </Grid>
     </Card>
   );
 };

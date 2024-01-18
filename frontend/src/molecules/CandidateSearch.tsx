@@ -80,7 +80,7 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
             sx={{
               inputProps: { "aria-label": "Must include all keywords" },
             }}
-            defaultChecked
+            defaultChecked={formData.must}
           />
           <Typography>Must have all keywords</Typography>
         </Grid>
@@ -159,7 +159,7 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
               label="Industry"
               onChange={handleFormChange}
             >
-              <MenuItem value={"any"}>Any Department</MenuItem>
+              <MenuItem value={"any"}>Any Industry</MenuItem>
               {industries.map((item) => (
                 <MenuItem value={item}>{item}</MenuItem>
               ))}

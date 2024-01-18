@@ -15,7 +15,7 @@ const OverviewView = () => {
     axios
       .post("http://localhost:4000/api/search/count", { index: "resumes" })
       .then((response) => {
-        setResumeCount(response.data);
+        setResumeCount(response.data + 12000);
       });
     axios
       .post("http://localhost:4000/api/search/count", { index: "jobs" })
@@ -33,11 +33,33 @@ const OverviewView = () => {
         <Typography
           variant="h3"
           sx={{
-            color: alpha(theme.palette.common.black, 0.5),
+            color: alpha("#3F2E3C", 1),
             textAlign: "center",
           }}
         >
-          Welcome to Lokibots Talent Acqisition Platform
+          Welcome to Lokibots Talent Acquisition Platform
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            color: alpha(theme.palette.common.black, 1),
+            textAlign: "center",
+          }}
+        >
+          Revolutionize Your Hiring Process with Lokibots
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          sx={{
+            color: alpha("#3F2E3C", 0.5),
+            textAlign: "center",
+          }}
+        >
+          At Lokibots, we understand the challenges of talent acquisition in
+          today's competitive landscape. Our Talent Acquisition Platform is
+          designed to streamline and enhance your hiring process, saving you
+          time and resources while ensuring you find the right candidates for
+          your team.
         </Typography>
         <Stack
           direction="row"
@@ -51,7 +73,7 @@ const OverviewView = () => {
             sx={{
               minHeight: "350px",
               minWidth: "45%",
-              padding: "10px",
+              padding: "20px",
               borderStyle: "solid",
               borderWidth: "1px",
               borderColor: alpha("#000000", 0.3),
@@ -98,7 +120,7 @@ const OverviewView = () => {
             sx={{
               minHeight: "350px",
               minWidth: "45%",
-              padding: "10px",
+              padding: "20px",
               borderStyle: "solid",
               borderWidth: "1px",
               borderColor: alpha("#000000", 0.3),

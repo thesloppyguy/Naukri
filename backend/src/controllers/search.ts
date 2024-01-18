@@ -6,7 +6,6 @@ import { SearchBody, NlpBody } from '../interfaces/search'
 export const searchFilterController: RequestHandler<unknown, unknown, SearchBody, unknown> = async (req, res, next) => {
   const query = await createGeneralQuery(req.body)
   console.log(JSON.stringify(query))
-  // return res.status(200).json(query)
   clinet.search({
     index: 'resumes',
     body: query
@@ -35,30 +34,35 @@ export const countController: RequestHandler = (req, res, next) => {
   })
 }
 
-export const jobsController: RequestHandler = (req, res, next) => {
+export const jobcodeController: RequestHandler = (req, res, next) => {
+  if (req.body.jobcode!==""){
+    clinet.search({
+      index: 'jobs',
+      body: {
+        "query": {
+          "bool": {
+            "must": [{ "match_phrase": { "job_id": req.body.jobcode } }]
+          }
+        },
+        "size": 16,
+        "from": (req.body.page - 1) * 16,
+      }
+    }).then((response) => {
+      return res.status(200).json(response.body)
+    }).catch((error) => { next(error) })
+  }
+  else{
   clinet.search({
     index: 'jobs',
     body: {
       "query": {
         "match_all": {}
-      }
+      },
+      "size": 16,
+      "from": (req.body.page - 1) * 16,
     }
   }).then((response) => {
     return res.status(200).json(response.body)
   }).catch((error) => { next(error) })
 }
-
-export const jobcodeController: RequestHandler = (req, res, next) => {
-  clinet.search({
-    index: 'jobs',
-    body: {
-      "query": {
-        "bool": {
-          "must": [{ "match_phrase": { "job_id": req.body.jobcode } }]
-        }
-      },
-    }
-  }).then((response) => {
-    return res.status(200).json(response.body)
-  }).catch((error) => { next(error) })
 }

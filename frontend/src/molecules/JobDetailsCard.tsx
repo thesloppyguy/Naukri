@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Button, Stack, alpha, useTheme } from "@mui/material";
 
-const JobDetailsCard = ({ job, selected, setSelected }: any) => {
+const JobDetailsCard = ({ job, setSelected }: any) => {
   const theme = useTheme();
   return (
     <Card
@@ -12,7 +12,7 @@ const JobDetailsCard = ({ job, selected, setSelected }: any) => {
       sx={{
         margin: "auto",
         alignContent: "center",
-        height: "60vh",
+        height: "80vh",
         padding: "20px",
         bgcolor: alpha(theme.palette.primary.main, 0.2),
         overflowY: "scroll",
