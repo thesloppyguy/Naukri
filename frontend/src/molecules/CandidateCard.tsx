@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Popover from "@mui/material/Popover";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { alpha } from "@mui/material";
 
 export default function CandidateCard({ candidate }: any) {
   const [open, setOpen] = useState<boolean>(false);
@@ -19,20 +20,23 @@ export default function CandidateCard({ candidate }: any) {
   };
   return (
     <>
-      <motion.div
-        style={{
+      <Box
+        sx={{
           minHeight: "264px",
           padding: "10px",
           borderStyle: "solid",
           borderWidth: "1px",
-          borderRadius: "25px",
+          borderColor: alpha("#000000", 0.3),
+          borderRadius: "15px",
+          boxShadow: 3,
+          bgcolor: "white",
         }}
         onClick={() => setOpen(!open)}
       >
-        <motion.h2>
-          {candidate.first_name} {candidate.last_name}
-        </motion.h2>
-      </motion.div>
+        <Typography>
+          {candidate._source.first_name} {candidate._source.last_name}
+        </Typography>
+      </Box>
     </>
   );
 }

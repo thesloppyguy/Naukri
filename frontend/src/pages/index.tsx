@@ -1,13 +1,9 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-import {
-  ApolloClient,
-  ApolloLink,
-  ApolloProvider,
-  InMemoryCache,
-} from "@apollo/client";
+// import { AppProvider, useApp } from "../states/AppContext";
 import { useScrollTop } from "../hooks/useScrollTop";
-import React, { useEffect } from "react";
-import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
+import IsAuth from "../util/IsAuth";
+import { AppProvider } from "../states/AppContext";
 
 const WrappedPage = () => {
   const navigate = useNavigate();
@@ -16,10 +12,8 @@ const WrappedPage = () => {
   const redirect = (path: string) => {
     navigate(path);
   };
-
-  const isAuthenticated = useAuth();
-
   const handleRoute = async () => {
+    const isAuthenticated = await IsAuth();
     if (isAuthenticated) {
       if (!location.pathname.includes("dashboard")) {
         redirect("/dashboard");
@@ -35,20 +29,11 @@ const WrappedPage = () => {
   return <Outlet />;
 };
 
-const httpLink = new ApolloLink((operation, forward) => {
-  operation.setContext({ start: new Date() });
-  return forward(operation);
-});
-const client = new ApolloClient({
-  link: httpLink,
-  cache: new InMemoryCache(),
-});
-
 export default function App() {
   useScrollTop();
   return (
-    <ApolloProvider client={client}>
+    <AppProvider>
       <WrappedPage />
-    </ApolloProvider>
+    </AppProvider>
   );
 }

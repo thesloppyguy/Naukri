@@ -1,8 +1,7 @@
-import React from "react";
-import SettingsView from "../../organisms/Dashboard/SettingsView";
 import { Helmet } from "react-helmet-async";
+import SettingsView from "../../organisms/Dashboard/SettingsView";
 
-const SettingsPage = () => {
+const UsersPage = () => {
   return (
     <>
       <Helmet>
@@ -13,4 +12,4 @@ const SettingsPage = () => {
   );
 };
 
-export default SettingsPage;
+export default UsersPage;

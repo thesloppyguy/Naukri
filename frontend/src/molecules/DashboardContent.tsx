@@ -9,7 +9,7 @@ import { alpha } from "@mui/material";
 
 // ----------------------------------------------------------------------
 
-const SPACING = 8;
+const SPACING = 20;
 
 export default function DashboardContent({ children, sx, ...other }: any) {
   const lgUp = useResponsive("up", "lg", "lg");
@@ -24,7 +24,7 @@ export default function DashboardContent({ children, sx, ...other }: any) {
         flexDirection: "column",
         px: 2,
         pt: `${HEADER.H_MOBILE + SPACING}px`,
-        bgcolor: alpha("#f5d49a", 0.08),
+
         ...(lgUp && {
           px: 2,
           pt: `${HEADER.H_DESKTOP + SPACING}px`,

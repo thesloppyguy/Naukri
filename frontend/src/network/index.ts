@@ -1,5 +1,7 @@
+import axios from "axios";
 import { ConflictError, UnauthorizedError } from "../errors/HttpsErrors";
-import { Organization, Candidate, User } from "../models";
+import { User } from "../interfaces/network";
+import { RegisterForm, LoginForm, ActivateForm, ResetPasswordForm } from "../interfaces/network"
 
 async function fetchData(input: RequestInfo, init?: RequestInit) {
     const response = await fetch(input, init);
@@ -23,13 +25,7 @@ export async function getLoggedInUser(): Promise<User> {
     return response.json();
 }
 
-export interface RegisterBody {
-    organizationName: string;
-    organizationEmail: string;
-    url?: string;
-}
-
-export async function signUp(details: RegisterBody): Promise<User> {
+export async function signUp(details: RegisterForm): Promise<User> {
     const response = await fetchData("/api/register",
         {
             method: "POST",
@@ -41,30 +37,19 @@ export async function signUp(details: RegisterBody): Promise<User> {
     return response.json();
 }
 
-export interface LoginBody {
-    orgId: string
-    email: string,
-    password: string,
-}
-
-export async function login(credentials: LoginBody): Promise<User> {
-    const response = await fetchData("/api/login",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(credentials),
+export async function login(credentials: LoginForm): Promise<any> {
+    axios.post("http://localhost:5000/api/login/", credentials, {
+        withCredentials: true,
+    })
+        .then((response) => {
+            return response
+        })
+        .catch((error) => {
+            return (error.response);
         });
-    return response.json();
 }
 
-export interface ActivateBody {
-    id: string
-    password: string
-}
-
-export async function activate(credentials: ActivateBody): Promise<User> {
+export async function activate(credentials: ActivateForm): Promise<User> {
     const response = await fetchData("/api/invite",
         {
             method: "POST",
@@ -76,12 +61,7 @@ export async function activate(credentials: ActivateBody): Promise<User> {
     return response.json();
 }
 
-export interface ResetPasswordBody {
-    id: string
-    password: string
-}
-
-export async function resetPassword(credentials: ResetPasswordBody): Promise<User> {
+export async function resetPassword(credentials: ResetPasswordForm): Promise<User> {
     const response = await fetchData("/api/reset",
         {
             method: "POST",
@@ -94,10 +74,9 @@ export async function resetPassword(credentials: ResetPasswordBody): Promise<Use
 }
 
 export async function logout() {
-    await fetchData("/api/logout", { method: "POST" });
+    axios
+        .post("http://localhost:5000/api/logout/", {
+            withCredentials: true,
+        })
 }
 
-export async function fetchNotes(): Promise<Candidate[]> {
-    const response = await fetchData("/api/notes", { method: "GET" });
-    return response.json();
-}

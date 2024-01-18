@@ -8,6 +8,7 @@ import {
   PhdDegree,
 } from "../constants";
 import { TagsInput } from "react-tag-input-component";
+import { useTheme } from "@mui/material/styles";
 
 const CandidateSearch = ({ formData, setFormData }: any) => {
   const handleFormChange = (e: any) => {
@@ -18,6 +19,12 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
     }));
   };
 
+  const handleMustChange = (e: any) => {
+    setFormData((prevData: any) => ({
+      ...prevData,
+      must: !prevData.must,
+    }));
+  };
   const handleKeywordChange = (e: string[]) => {
     setFormData((prevData: any) => ({
       ...prevData,
@@ -35,11 +42,12 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
   return (
     <Box
       sx={{
-        borderStyle: "solid",
-        borderWidth: "1px",
-        borderRadius: "25px",
+        // borderStyle: "solid",
+        // borderWidth: "1px",
+        borderRadius: "10px",
+        boxShadow: 3,
         padding: "15px",
-        bgcolor: "#ffffff",
+        // bgcolor: theme.palette.primary.main,
       }}
     >
       <Grid container spacing={1}>
@@ -68,12 +76,12 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
           <Checkbox
             size="small"
             name="must"
-            onChange={handleFormChange}
+            onChange={handleMustChange}
             color="primary"
             sx={{
               inputProps: { "aria-label": "Must include all keywords" },
             }}
-            defaultChecked={formData.must}
+            defaultChecked
           />
           <Typography>Must have all keywords</Typography>
         </Grid>
@@ -160,10 +168,10 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4.5}>
           <TextField
             name="currentCompany"
-            label="Current Company"
+            label="Company"
             value={formData.currentCompany}
             onChange={handleFormChange}
             fullWidth
@@ -171,13 +179,23 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
           />
         </Grid>
 
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4.5}>
           <TextField
             size="small"
             name="currentDesignation"
             value={formData.currentDesignation}
             onChange={handleFormChange}
-            label="Current Designation"
+            label="Designation"
+            fullWidth
+          />
+        </Grid>
+        <Grid item xs={12} md={3}>
+          <TextField
+            size="small"
+            name="jobcode"
+            value={formData.jobcode}
+            onChange={handleFormChange}
+            label="Jobcode"
             fullWidth
           />
         </Grid>
@@ -276,15 +294,23 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={12} md={3}>
-          <TextField
+        <Grid
+          item
+          xs={12}
+          md={3}
+          sx={{ alignItems: "center", display: "flex" }}
+        >
+          <Checkbox
             size="small"
-            name="jobcode"
-            value={formData.jobcode}
-            onChange={handleFormChange}
-            label="Jobcode Global"
-            fullWidth
+            name="must"
+            onChange={handleMustChange}
+            color="primary"
+            sx={{
+              inputProps: { "aria-label": "Must include all keywords" },
+            }}
+            defaultChecked
           />
+          <Typography>Global Search</Typography>
         </Grid>
       </Grid>
     </Box>

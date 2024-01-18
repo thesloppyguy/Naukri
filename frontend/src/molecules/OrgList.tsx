@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import {
   Avatar,
-  FormControlLabel,
   IconButton,
   List,
   ListItem,
@@ -11,7 +10,6 @@ import {
   Paper,
   Select,
   Stack,
-  Switch,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -19,13 +17,6 @@ import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 // import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 
 import PermIdentityIcon from "@mui/icons-material/PermIdentity";
-// import { IUser } from "../interfaces/Users";
-// import AlertDialog from "./Dialog";
-// import { RoleType, useUpdateCustomerMutation } from "../generated/graphql";
-// import { useApp } from "../states/AppContext";
-// import { Notification } from "./Notification";
-// import { INotification } from "../interfaces/General";
-// import AssignRole from "../organisms/Role/AssignRole";
 
 enum ACTION_TYPE {
   DELETE,
@@ -38,7 +29,7 @@ interface UserListProps {
   setUserList: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-const UserList: FC<UserListProps> = ({ userList, setUserList, onDelete }) => {
+const OrgList: FC<UserListProps> = ({ userList, setUserList, onDelete }) => {
   userList = [
     {
       _id: "659dc26ac103f0d75cb6e331",
@@ -140,4 +131,4 @@ const UserList: FC<UserListProps> = ({ userList, setUserList, onDelete }) => {
   );
 };
 
-export default UserList;
+export default OrgList;

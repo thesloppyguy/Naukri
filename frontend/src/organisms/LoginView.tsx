@@ -1,4 +1,4 @@
-import { ReactEventHandler, useState } from "react";
+import { ReactEventHandler, useContext, useState } from "react";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -10,27 +10,42 @@ import InputAdornment from "@mui/material/InputAdornment";
 import createHttpError, { isHttpError } from "http-errors";
 import { useRouter } from "../hooks/useRouter";
 import Iconify from "../molecules/Iconify";
-
-interface FormData {
-  orgId: string;
-  email: string;
-  password: string;
-}
+import { login } from "../network";
+import { LoginForm, User } from "../interfaces/network";
+import { SubmitButton } from "../atoms/SubmitButton";
+import axios from "axios";
+import Divider from "@mui/material/Divider";
+import { UserContext } from "../states/AppContext";
+// import { Context } from "../context";
 
 export default function LoginView() {
-  const theme = useTheme();
+  const userContext = useContext(UserContext);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<LoginForm>({
     orgId: "",
     email: "",
     password: "",
   });
 
   const handleLogin = async () => {
-    console.log(formData);
     setLoading(true);
+
+    axios
+      .post("http://localhost:5000/api/login/", formData, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        setError("");
+        router.push("/dashboard");
+        userContext?.setUser(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        setError(error.response.data.error);
+      });
     setLoading(false);
   };
 
@@ -42,22 +57,29 @@ export default function LoginView() {
     }));
   };
 
-  const handleShowPassword = () => {
-    setShowPassword((prevState) => !prevState);
-  };
-
   const renderForm = (
     <>
       <Stack spacing={3}>
         <TextField
+          required
+          name="orgId"
+          label="Organization"
+          value={formData.orgId}
+          onChange={handleInputChange}
+        />
+        <TextField
+          required
           name="email"
           label="Email address"
+          value={formData.email}
           onChange={handleInputChange}
         />
 
         <TextField
+          required
           name="password"
           label="Password"
+          value={formData.password}
           type={showPassword ? "text" : "password"}
           onChange={handleInputChange}
           InputProps={{
@@ -92,7 +114,7 @@ export default function LoginView() {
         </Link>
       </Stack>
 
-      <LoadingButton
+      <SubmitButton
         fullWidth
         size="large"
         type="submit"
@@ -101,7 +123,7 @@ export default function LoginView() {
         onClick={handleLogin}
       >
         Login
-      </LoadingButton>
+      </SubmitButton>
     </>
   );
 
@@ -110,12 +132,19 @@ export default function LoginView() {
       <Typography variant="h4" textAlign={"center"}>
         Login to Lokibots
       </Typography>
-      <Typography variant="body2" sx={{ mt: 2, mb: 5 }} textAlign={"center"}>
+      <Typography variant="body2" sx={{ mt: 2, mb: 2 }} textAlign={"center"}>
         Don’t have an account?
         <Link href="/user/register" variant="subtitle2" sx={{ ml: 0.5 }}>
           Get started.
         </Link>
       </Typography>
+      {error ? (
+        <Divider sx={{ color: "red", py: "2px" }} textAlign={"center"}>
+          {error}
+        </Divider>
+      ) : (
+        <Divider></Divider>
+      )}
       {renderForm}
     </>
   );

@@ -8,10 +8,16 @@ import session from 'express-session'
 import env from './utils/validateEnv'
 import MongoStore from 'connect-mongo'
 import { requiresAuth } from './middleware/auth'
+import cors from 'cors';
 
 const app = express()
 
 app.use(morgan('tiny'))
+
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
 
 app.use(express.json())
 

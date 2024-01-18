@@ -1,3 +1,4 @@
+import { RegisterBody, ActivateBody, ResetPasswordBody, LoginBody } from "../interfaces/user"
 import { type RequestHandler } from 'express'
 import createHttpError from 'http-errors'
 import UserModel from '../models/user'
@@ -7,17 +8,11 @@ import bcrypt from 'bcrypt'
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
   try {
-    const user = await UserModel.findById(req.session.userId).select('+email').exec()
+    const user = await UserModel.findById(req.session.userId).populate('organization').exec()
     res.status(200).json(user)
   } catch (error) {
     next(error)
   }
-}
-
-interface RegisterBody {
-  organizationName: string
-  organizationEmail: string
-  url?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -46,11 +41,6 @@ export const registerController: RequestHandler<unknown, unknown, RegisterBody, 
   }
 }
 
-interface ActivateBody {
-  id: string
-  password: string
-}
-
 export const activateController: RequestHandler<unknown, unknown, ActivateBody, unknown> = async (req, res, next) => {
   const passwordRaw = req.body.password
   const id = req.body.id
@@ -72,11 +62,6 @@ export const activateController: RequestHandler<unknown, unknown, ActivateBody, 
   } catch (error) {
     next(error)
   }
-}
-
-interface ResetPasswordBody {
-  id: string
-  password?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -103,12 +88,6 @@ export const resetPasswordController: RequestHandler<unknown, unknown, ResetPass
   }
 }
 
-interface LoginBody {
-  orgId?: string
-  email?: string
-  password?: string | Buffer
-}
-
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const loginController: RequestHandler<unknown, unknown, LoginBody, unknown> = async (req, res, next) => {
   const email = req.body.email
@@ -125,7 +104,7 @@ export const loginController: RequestHandler<unknown, unknown, LoginBody, unknow
     if ((email == null) || (password == null)) {
       throw createHttpError(400, 'Parameters missing')
     }
-    const user = await UserModel.findOne({ email, organization: org._id }).select('+password +email').exec()
+    const user = await UserModel.findOne({ email, organization: org._id }).populate('organization').select('+password +email').exec()
 
     if (user === null) {
       throw createHttpError(401, 'Invalid credentials')
@@ -147,6 +126,7 @@ export const loginController: RequestHandler<unknown, unknown, LoginBody, unknow
 export const logoutController: RequestHandler = (req, res, next) => {
   req.session.destroy(error => {
     if (error !== null) {
+      res.clearCookie('connect.sid', { path: '/' });
       next(error)
     } else {
       res.sendStatus(200)

@@ -10,7 +10,7 @@ import JobsPage from "./pages/DashboardPage/JobsPage";
 import MaintainerPage from "./pages/DashboardPage/MaintainerPage";
 import OverviewPage from "./pages/DashboardPage/OverviewPage";
 import PreLoginPage from "./pages/PreLoginPage";
-import SettingsPage from "./pages/SettingsPage";
+import SettingsPage from "./pages/DashboardPage/SettingsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import App from "./pages";
 

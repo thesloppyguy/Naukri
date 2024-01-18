@@ -1,12 +1,17 @@
 import Box from "@mui/material/Box";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Header from "../../molecules/Header";
 import Nav from "../../molecules/Nav";
 import DashboardContent from "../../molecules/DashboardContent";
+import { useRouter } from "../../hooks/useRouter";
 
 const DashboadPage = () => {
   const [openNav, setOpenNav] = useState(false);
+  const router = useRouter();
+  useEffect(() => {
+    router.push("/dashboard/overview");
+  }, []);
 
   return (
     <>

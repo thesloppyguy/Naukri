@@ -1,17 +1,35 @@
-import { SearchBody, NlpBody } from "../controllers/search"
+import { SearchBody, NlpBody } from "../interfaces/search"
 import department from "../const/department"
 import industry from "../const/industry"
+import createHttpError from "http-errors"
+import clinet from '../os-client'
 
-const createGeneralQuery = (params: SearchBody) => {
+const getDescription = async (code: string) => {
+  const response = await clinet.search({
+    index: 'jobs',
+    body: {
+      "query": {
+        "bool": {
+          "must": [{ "match_phrase": { "job_id": code } }],
+        }
+      }
+    }
+  })
+  if (response.body.hits.total.value > 0) {
+    return response.body.hits.hits[0]._source.dec
+  }
+}
+
+const createGeneralQuery = async (params: SearchBody) => {
   const must = []
   const should = []
   const mustNot = []
-  if (params.must === "on") {
+  if (params.must === true) {
     for (let i = 0; i < params.keywords.length; i++) {
       must.push({ "match_phrase": { "review_body": params.keywords[i] } })
     }
   }
-  else {
+  else if (params.must === false) {
     for (let i = 0; i < params.keywords.length; i++) {
       should.push({ "match_phrase": { "review_body": params.keywords[i] } })
     }
@@ -30,9 +48,70 @@ const createGeneralQuery = (params: SearchBody) => {
     }
   }
   if (params.location !== "") {
-    must.push({ "match_phrase": { "location": params.location } })
+    must.push({ "match_phrase": { "current_address": params.location } })
   }
-  if (params.gender !== "") {
+  // if (params.currentCompany !== "") {
+  //   must.push({
+  //     "nested": {
+  //       "path": "work_experience", "query": {
+  //         "more_like_this": {
+  //           "fields": ["work_experience.employee"],
+  //           "like": params.currentCompany, "min_term_freq": 1,
+  //           "min_doc_freq": 1
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+  // if (params.currentDesignation !== "") {
+  //   must.push({
+  //     "more_like_this": {
+  //       "fields": ["review_body"],
+  //       "like": params.currentDesignation, "min_term_freq": 1,
+  //       "min_doc_freq": 1
+  //     }
+  //   })
+  // }
+  // if (params.ugCourse !== "any") {
+  //   must.push({
+  //     "nested": {
+  //       "path": "education", "query": {
+  //         "more_like_this": {
+  //           "fields": ["education.degree_name"],
+  //           "like": params.ugCourse, "min_term_freq": 1,
+  //           "min_doc_freq": 1
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+  // if (params.pgCourse !== "any") {
+  //   must.push({
+  //     "nested": {
+  //       "path": "education", "query": {
+  //         "more_like_this": {
+  //           "fields": ["education.degree_name"],
+  //           "like": params.pgCourse, "min_term_freq": 1,
+  //           "min_doc_freq": 1
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+  // if (params.pdCourse !== "any") {
+  //   must.push({
+  //     "nested": {
+  //       "path": "education", "query": {
+  //         "more_like_this": {
+  //           "fields": ["education.degree_name"],
+  //           "like": params.pdCourse, "min_term_freq": 1,
+  //           "min_doc_freq": 1
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
+  if (params.gender !== "any") {
     must.push({ "match_phrase": { "gender": params.gender } })
   }
   must.push({
@@ -43,19 +122,50 @@ const createGeneralQuery = (params: SearchBody) => {
       }
     }
   })
+  if (params.jobcode === "") {
+    return {
+      "_source": {
+        "exclude": ["passage_embedding"]
+      },
+      "query": {
+        "bool": {
+          "must": must,
+          "should": should,
+          "must_not": mustNot
+        }
+      },
+      "size": 16,
+      "from": (params.page - 1) * 16,
+    }
+  }
+  const description = await getDescription(params.jobcode)
+  if (description === "") {
+    throw createHttpError(400, 'Jobcode not found')
+  }
+  if (params.global !== true) {
+    must.push({ "match_phrase": { "job_id": params.jobcode } })
+  }
   return {
     "_source": {
-      "exclude": ["passage_embedding"]
+      "excludes": [
+        "passage_embedding"]
     },
     "query": {
-      "bool": {
-        "must": must,
-        "should": should,
-        "must_not": mustNot
+      "neural": {
+        "passage_embedding": {
+          "query_text": description,
+          "model_id": "xBArqIwBnT_YCGy5xijZ",
+          "k": 50,
+          "filter": {
+            "bool": {
+              "must": [{ "match_phrase": { "job_id": "LNT/AS/801615" } }],
+              "should": [],
+              "must_not": []
+            }
+          }
+        }
       }
-    },
-    "size": 10,
-    "from": (params.page - 1) * 10,
+    }
   }
 
 }
@@ -67,7 +177,9 @@ const createNLPQuery = (params: NlpBody) => {
     },
     "query": {
       "match_all": {}
-    }
+    },
+    "size": 16,
+    "from": (params.page - 1) * 16,
   }
 }
 

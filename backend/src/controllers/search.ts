@@ -1,31 +1,12 @@
 import { type RequestHandler } from 'express'
 import clinet from '../os-client'
 import { createNLPQuery, createGeneralQuery } from '../utils/createSearchQuery'
+import { SearchBody, NlpBody } from '../interfaces/search'
 
-export interface SearchBody {
-  keywords: string[]
-  must: string
-  notKeywords: string[]
-  gender: string
-  location: string
-  expMax: string
-  expMin: string
-  industry: string
-  department: string
-  currentCompany: string
-  currentDesignation: string
-  ugCourse: string,
-  pgCourse: string,
-  pdCourse: string,
-  jobcode: string
-  page: number
-}
-export interface NlpBody {
-  query: string
-}
-
-export const searchFilterController: RequestHandler<unknown, unknown, SearchBody, unknown> = (req, res, next) => {
-  const query = createGeneralQuery(req.body)
+export const searchFilterController: RequestHandler<unknown, unknown, SearchBody, unknown> = async (req, res, next) => {
+  const query = await createGeneralQuery(req.body)
+  console.log(JSON.stringify(query))
+  // return res.status(200).json(query)
   clinet.search({
     index: 'resumes',
     body: query

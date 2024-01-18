@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { NAV, navConfig, maintainerConfig, settingsConfig } from "../constants";
 import { usePathname } from "../hooks/usePathname";
 import { useResponsive } from "../hooks/useResponsive";
@@ -11,8 +11,10 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import NavItem from "../atoms/NavItems";
 import Avatar from "@mui/material/Avatar";
+import { UserContext } from "../states/AppContext";
 
 const Nav = ({ openNav, onCloseNav }: any) => {
+  const userContext = useContext(UserContext);
   const pathname = usePathname();
   const upLg = useResponsive("up", "lg", "lg");
 
@@ -23,12 +25,6 @@ const Nav = ({ openNav, onCloseNav }: any) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const account = {
-    name: "Jaydon Frankie",
-    email: "demo@minimals.cc",
-    role: "maintainer",
-    photoURL: "/assets/avatars/base_avatar.png",
-  };
   const renderContent = (
     <Scrollbar
       sx={{
@@ -55,8 +51,10 @@ const Nav = ({ openNav, onCloseNav }: any) => {
       >
         <Box sx={{ ml: 2 }}>
           <Stack direction="row" sx={{ alignItems: "center" }}>
-            <Avatar src={account.photoURL} alt="photoURL" />
-            <Typography variant="subtitle2">{account.name}</Typography>
+            <Avatar src={"/assets/avatars/base_avatar.png"} alt="photoURL" />
+            <Typography variant="subtitle2" sx={{ px: 2 }}>
+              {userContext?.user?.email}
+            </Typography>
           </Stack>
         </Box>
       </Box>
@@ -65,21 +63,14 @@ const Nav = ({ openNav, onCloseNav }: any) => {
           <NavItem key={item.title} item={item} />
         ))}
       </Stack>
-      <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ ml: 2, pb: 3 }}>
-        <Stack component="nav" spacing={0.5}>
-          {account.role === "maintainer" ? (
-            <NavItem key={maintainerConfig.title} item={maintainerConfig} />
-          ) : (
-            <> </>
-          )}
-          {account.role === "admin" || account.role === "maintainer" ? (
-            <NavItem key={settingsConfig.title} item={settingsConfig} />
-          ) : (
-            <></>
-          )}
-        </Stack>
-      </Box>
+      <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
+        {userContext?.user?.role === "Maintainer" ? (
+          <NavItem key={maintainerConfig.title} item={maintainerConfig} />
+        ) : (
+          <> </>
+        )}
+        <NavItem key={settingsConfig.title} item={settingsConfig} />
+      </Stack>
     </Scrollbar>
   );
 
