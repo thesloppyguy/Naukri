@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import SearchBar from "../../molecules/SearchBar";
 import Stack from "@mui/material/Stack";
 import Grid from "@mui/material/Grid";

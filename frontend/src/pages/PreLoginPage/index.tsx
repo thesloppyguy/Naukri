@@ -6,6 +6,7 @@ import { bgGradient } from "../../theme/css";
 import { alpha, useTheme } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
+
 const PreLoginPage = () => {
   const theme = useTheme();
   const location = useLocation();
@@ -18,7 +19,7 @@ const PreLoginPage = () => {
       return "Reset Password";
     } else if (location.pathname.includes("register")) {
       return "Register";
-    } else if (location.pathname.includes("login")) {
+    } else if (location.pathname.includes("user")) {
       return "Login";
     } else {
       return "Register";
@@ -50,7 +51,7 @@ const PreLoginPage = () => {
             sx={{
               p: 5,
               width: 1,
-              maxWidth: 360,
+              maxWidth: 420,
             }}
           >
             <Outlet />

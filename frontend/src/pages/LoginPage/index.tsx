@@ -1,9 +1,12 @@
+import { Helmet } from "react-helmet-async";
 import LoginView from "../../organisms/LoginView";
 
 const LoginPage = () => {
   return (
     <>
-      <title> Login </title>
+      <Helmet>
+        <title> Login </title>
+      </Helmet>
       <LoginView />
     </>
   );

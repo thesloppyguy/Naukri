@@ -1,5 +1,4 @@
 import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
-// import { AppProvider, useApp } from "../states/AppContext";
 import { useScrollTop } from "../hooks/useScrollTop";
 import { useEffect } from "react";
 import IsAuth from "../util/IsAuth";

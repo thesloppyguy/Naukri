@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
-import Header from "../../molecules/Header";
 import Nav from "../../molecules/Nav";
 import DashboardContent from "../../molecules/DashboardContent";
 import { useRouter } from "../../hooks/useRouter";
@@ -15,7 +14,6 @@ const DashboadPage = () => {
 
   return (
     <>
-      {/* <Header onOpenNav={() => setOpenNav(true)} /> */}
       <Box
         sx={{
           minHeight: 1,

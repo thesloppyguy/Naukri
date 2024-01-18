@@ -1,16 +1,12 @@
-import { ReactEventHandler, useState } from "react";
+import { useState } from "react";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { useTheme } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
-import createHttpError, { isHttpError } from "http-errors";
 import { useRouter } from "../hooks/useRouter";
-import Iconify from "../molecules/Iconify";
 import { useParams } from "react-router-dom";
+import { SubmitButton } from "../atoms/SubmitButton";
 
 interface FormData {
   orgId: string;
@@ -56,7 +52,7 @@ export default function ForgotPasswordView() {
         sx={{ my: 3 }}
       ></Stack>
 
-      <LoadingButton
+      <SubmitButton
         fullWidth
         size="large"
         type="submit"
@@ -65,7 +61,7 @@ export default function ForgotPasswordView() {
         onClick={handleForgotPassword}
       >
         Send Request
-      </LoadingButton>
+      </SubmitButton>
     </>
   );
 

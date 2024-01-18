@@ -1,9 +1,7 @@
-import PropTypes from "prop-types";
 import { forwardRef } from "react";
 
 import Box from "@mui/material/Box";
 import { SxProps } from "@mui/system";
-// ----------------------------------------------------------------------
 
 interface SVG {
   src: string;

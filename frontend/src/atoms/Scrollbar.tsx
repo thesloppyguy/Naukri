@@ -4,8 +4,6 @@ import Box from "@mui/material/Box";
 import SimpleBar from "simplebar-react";
 import { alpha, styled } from "@mui/material/styles";
 
-// ----------------------------------------------------------------------
-
 const StyledRootScrollbar = styled("div")(() => ({
   flexGrow: 1,
   height: "100%",

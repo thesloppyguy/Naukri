@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
-import { Cancel, Tag } from "@mui/icons-material";
-import { FormControl, Stack, TextField, Typography } from "@mui/material";
+import { Cancel } from "@mui/icons-material";
+import { Stack, TextField, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 
 interface TagsProps {

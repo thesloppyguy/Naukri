@@ -3,7 +3,7 @@ import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { alpha, useTheme } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import LoadingWheel from "../../atoms/LoadingWheel";
 
@@ -13,12 +13,12 @@ const OverviewView = () => {
   const [jobsCount, setJobsCount] = useState(0);
   useEffect(() => {
     axios
-      .post("http://localhost:5000/api/search/count", { index: "resumes" })
+      .post("http://localhost:4000/api/search/count", { index: "resumes" })
       .then((response) => {
         setResumeCount(response.data);
       });
     axios
-      .post("http://localhost:5000/api/search/count", { index: "jobs" })
+      .post("http://localhost:4000/api/search/count", { index: "jobs" })
       .then((response) => {
         setJobsCount(response.data);
       });

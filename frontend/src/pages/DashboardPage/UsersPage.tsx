@@ -1,4 +1,3 @@
-import React from "react";
 import UsersView from "../../organisms/Dashboard/UsersView";
 import { Helmet } from "react-helmet-async";
 

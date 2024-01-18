@@ -6,11 +6,7 @@ import { useContext } from "react";
 
 const UserWindow = () => {
   const userContext = useContext(UserContext);
-  console.log(userContext?.user);
-  const email = userContext?.user?.email;
-  const role = userContext?.user?.role;
-  // const organization = user.organization.name;
-  // const contactEmail = user.organization.contactEmail;
+
   return (
     <Paper
       elevation={3}

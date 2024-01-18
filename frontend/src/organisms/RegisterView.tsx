@@ -1,23 +1,14 @@
-import { ReactEventHandler, useState } from "react";
+import { useState } from "react";
 
-import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
-import Card from "@mui/material/Card";
 import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import LoadingButton from "@mui/lab/LoadingButton";
-import { alpha, useTheme } from "@mui/material/styles";
-import InputAdornment from "@mui/material/InputAdornment";
+import { useTheme } from "@mui/material/styles";
 
 import { useRouter } from "../hooks/useRouter";
-import Logo from "../molecules/Logo";
-import Iconify from "../molecules/Iconify";
-import { bgGradient } from "../theme/css";
-
+import { SubmitButton } from "../atoms/SubmitButton";
+import axios from "axios";
 interface FormData {
   organizationName: string;
   organizationEmail: string;
@@ -38,6 +29,7 @@ export default function RegisterView() {
   const handleRegister = async () => {
     console.log(formData);
     setLoading(true);
+    axios.post("", formData);
     setLoading(false);
   };
 
@@ -81,7 +73,7 @@ export default function RegisterView() {
         sx={{ my: 3 }}
       ></Stack>
 
-      <LoadingButton
+      <SubmitButton
         fullWidth
         size="large"
         type="submit"
@@ -90,7 +82,7 @@ export default function RegisterView() {
         onClick={handleRegister}
       >
         Register
-      </LoadingButton>
+      </SubmitButton>
     </form>
   );
 

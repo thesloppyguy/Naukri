@@ -4,11 +4,6 @@ import { Icon } from "@iconify/react";
 
 import Box from "@mui/material/Box";
 
-interface IconifyProps {
-  icon: string;
-  sx?: React.CSSProperties;
-  width?: number;
-}
 const Iconify = forwardRef(
   ({ icon, width = 20, sx, ...other }: any, ref: Ref<HTMLDivElement>) => (
     <Box

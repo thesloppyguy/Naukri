@@ -8,7 +8,6 @@ import {
   PhdDegree,
 } from "../constants";
 import { TagsInput } from "react-tag-input-component";
-import { useTheme } from "@mui/material/styles";
 
 const CandidateSearch = ({ formData, setFormData }: any) => {
   const handleFormChange = (e: any) => {

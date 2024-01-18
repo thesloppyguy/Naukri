@@ -1,4 +1,3 @@
-import React from "react";
 import ActivateView from "../../organisms/ActivateView";
 
 const ActivatePage = () => {

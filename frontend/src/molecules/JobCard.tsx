@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { alpha } from "@mui/material/styles";
-import React from "react";
 
 const JobCard = ({ job, state, setOpen }: any) => {
   const handleClose = () => {

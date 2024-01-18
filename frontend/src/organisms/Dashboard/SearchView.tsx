@@ -49,7 +49,7 @@ const SearchView = () => {
     if (check) {
       axios
         .post(
-          "http://localhost:5000/api/search/filter",
+          "http://localhost:4000/api/search/filter",
           { ...formData, page: page },
           {
             withCredentials: true,
@@ -65,7 +65,7 @@ const SearchView = () => {
     } else {
       axios
         .post(
-          "http:/localhost:5000/api/search/nlp",
+          "http:/localhost:4000/api/search/nlp",
           { ...nlpData, page: page },
           {
             withCredentials: true,

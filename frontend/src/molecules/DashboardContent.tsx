@@ -1,13 +1,6 @@
-import PropTypes from "prop-types";
-
 import Box from "@mui/material/Box";
-
 import { useResponsive } from "../hooks/useResponsive";
-
 import { NAV, HEADER } from "../constants";
-import { alpha } from "@mui/material";
-
-// ----------------------------------------------------------------------
 
 const SPACING = 20;
 

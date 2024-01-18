@@ -1,16 +1,12 @@
 import { FC, useState } from "react";
 import {
-  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
   MenuItem,
   Paper,
   Select,
-  Stack,
-  Switch,
   TextField,
-  Typography,
 } from "@mui/material";
 import { SubmitButton } from "../atoms/SubmitButton";
 

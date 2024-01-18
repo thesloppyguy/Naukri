@@ -1,11 +1,6 @@
 import Box from "@mui/material/Box";
-import Link from "@mui/material/Link";
-import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import Popover from "@mui/material/Popover";
 import { useState } from "react";
-import { motion } from "framer-motion";
 import { alpha } from "@mui/material";
 
 export default function CandidateCard({ candidate }: any) {

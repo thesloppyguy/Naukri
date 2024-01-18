@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography";
 import React from "react";
 import UserList from "../../molecules/UserList";
 import InviteUser from "../../molecules/InviteUser";

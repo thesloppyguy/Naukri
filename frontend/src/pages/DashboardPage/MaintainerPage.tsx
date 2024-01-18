@@ -1,4 +1,3 @@
-import React from "react";
 import MaintainerView from "../../organisms/Dashboard/MaintainerView";
 import { Helmet } from "react-helmet-async";
 

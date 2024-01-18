@@ -38,7 +38,7 @@ export async function signUp(details: RegisterForm): Promise<User> {
 }
 
 export async function login(credentials: LoginForm): Promise<any> {
-    axios.post("http://localhost:5000/api/login/", credentials, {
+    axios.post("http://localhost:4000/api/login/", credentials, {
         withCredentials: true,
     })
         .then((response) => {
@@ -75,7 +75,7 @@ export async function resetPassword(credentials: ResetPasswordForm): Promise<Use
 
 export async function logout() {
     axios
-        .post("http://localhost:5000/api/logout/", {
+        .post("http://localhost:4000/api/logout/", {
             withCredentials: true,
         })
 }
