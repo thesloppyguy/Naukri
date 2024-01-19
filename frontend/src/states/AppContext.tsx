@@ -1,8 +1,8 @@
 import React, { createContext, useState, useMemo, useContext } from "react";
-import { User } from "../interfaces/network";
+import { IUser } from "../interfaces/Polling";
 
 interface IUserContext {
-  user: User | null;
+  user: IUser | null;
   setUser: React.Dispatch<React.SetStateAction<IUserContext["user"]>>;
 }
 

@@ -1,4 +1,4 @@
-export interface Organisation {
+export interface IOrganisation {
     _id: string
     name: string
     contactEmail: string
@@ -7,32 +7,32 @@ export interface Organisation {
     __v: number
 }
 
-export interface User {
+export interface IUser {
     _id: string,
     email: string
     password: string
     role: 'User' | 'Admin' | 'Maintainer'
-    organization: Organisation
+    organization: IOrganisation
     __v: number
 }
 
-export interface ResetPasswordForm {
+export interface IResetPassword {
     id: string
     password: string
 }
 
-export interface ActivateForm {
+export interface IActivate {
     id: string
     password: string
 }
 
-export interface LoginForm {
+export interface ILogin {
     orgId: string
     email: string,
     password: string,
 }
 
-export interface RegisterForm {
+export interface IRegister {
     organizationName: string;
     organizationEmail: string;
     url?: string;

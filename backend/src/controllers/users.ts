@@ -4,6 +4,7 @@ import createHttpError from 'http-errors'
 import UserModel from '../models/user'
 import OrgnisationModel from '../models/org'
 import bcrypt from 'bcrypt'
+import { sendInvite } from "../utils/sendInvite"
 
 // eslint-disable-next-line @typescript-eslint/no-misused-promises
 export const getAuthenticatedUser: RequestHandler = async (req, res, next) => {
@@ -35,6 +36,7 @@ export const registerController: RequestHandler<unknown, unknown, RegisterBody, 
       url,
       status: 'denied'
     })
+    await sendInvite()
     return res.status(201).json(newOrganisation)
   } catch (error) {
     next(error)

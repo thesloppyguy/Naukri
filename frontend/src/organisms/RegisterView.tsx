@@ -8,7 +8,7 @@ import { useTheme } from "@mui/material/styles";
 
 import { useRouter } from "../hooks/useRouter";
 import { SubmitButton } from "../atoms/SubmitButton";
-import { RegisterForm } from "../interfaces/network";
+import { IRegister } from "../interfaces/Polling";
 import axios from "axios";
 import Divider from "@mui/material/Divider";
 
@@ -17,7 +17,7 @@ export default function RegisterView() {
   const router = useRouter();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState<RegisterForm>({
+  const [formData, setFormData] = useState<IRegister>({
     organizationName: "",
     organizationEmail: "",
     url: "",
@@ -27,7 +27,7 @@ export default function RegisterView() {
     console.log(formData);
     setLoading(true);
     axios
-      .post("http://localhost:4000/api/register", formData)
+      .post("http://localhost:5000/api/register", formData)
       .then((response) => {
         router.push("/user");
         setLoading(false);

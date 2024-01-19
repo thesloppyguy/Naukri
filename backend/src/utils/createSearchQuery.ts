@@ -1,8 +1,10 @@
 import { SearchBody, NlpBody } from "../interfaces/search"
 import department from "../const/department"
 import industry from "../const/industry"
+import ug from "../const/ug"
 import createHttpError from "http-errors"
 import clinet from '../os-client'
+import stopwords from "../const/stopwords"
 
 const getDescription = async (code: string) => {
   const response = await clinet.search({
@@ -18,6 +20,16 @@ const getDescription = async (code: string) => {
   if (response.body.hits.total.value > 0) {
     return response.body.hits.hits[0]._source.description
   }
+}
+
+const cleanText = (text: string) => {
+  if (text == undefined)
+    return []
+  const cleanTest = text.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\s+/g, ' ').trim();
+  const uniqueWords = new Set(cleanTest.split(' '));
+  const finalWordList: string[] = Array.from(uniqueWords).filter((word) => word.length > 1);
+  const removedWordList: string[] = Array.from(finalWordList).filter((word) => !stopwords.includes(word));
+  return removedWordList;
 }
 
 const createGeneralQuery = async (params: SearchBody) => {
@@ -50,41 +62,41 @@ const createGeneralQuery = async (params: SearchBody) => {
   if (params.location !== "") {
     must.push({ "match_phrase": { "current_address": params.location } })
   }
-  // if (params.currentCompany !== "") {
-  //   must.push({
-  //     "nested": {
-  //       "path": "work_experience", "query": {
-  //         "more_like_this": {
-  //           "fields": ["work_experience.employee"],
-  //           "like": params.currentCompany, "min_term_freq": 1,
-  //           "min_doc_freq": 1
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-  // if (params.currentDesignation !== "") {
-  //   must.push({
-  //     "more_like_this": {
-  //       "fields": ["review_body"],
-  //       "like": params.currentDesignation, "min_term_freq": 1,
-  //       "min_doc_freq": 1
-  //     }
-  //   })
-  // }
-  // if (params.ugCourse !== "any") {
-  //   must.push({
-  //     "nested": {
-  //       "path": "education", "query": {
-  //         "more_like_this": {
-  //           "fields": ["education.degree_name"],
-  //           "like": params.ugCourse, "min_term_freq": 1,
-  //           "min_doc_freq": 1
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
+  if (params.currentCompany !== "") {
+    must.push({
+      "nested": {
+        "path": "work_experience", "query": {
+          "more_like_this": {
+            "fields": ["work_experience.employee"],
+            "like": params.currentCompany, "min_term_freq": 1,
+            "min_doc_freq": 1
+          }
+        }
+      }
+    })
+  }
+  if (params.currentDesignation !== "") {
+    must.push({
+      "more_like_this": {
+        "fields": ["review_body"],
+        "like": params.currentDesignation, "min_term_freq": 1,
+        "min_doc_freq": 1
+      }
+    })
+  }
+  if (params.ugCourse !== "any") {
+    if (params.ugCourse !== "no") {
+      console.log(params.ugCourse)
+      must.push({
+        "nested": {
+          "path": "education",
+          "query": {
+            "terms": { "education.degree_name": ug[params.ugCourse] }
+          }
+        }
+      })
+    }
+  }
   // if (params.pgCourse !== "any") {
   //   must.push({
   //     "nested": {
@@ -122,54 +134,35 @@ const createGeneralQuery = async (params: SearchBody) => {
       }
     }
   })
-  if (params.jobcode === "") {
-    return {
-      "_source": {
-        "exclude": ["passage_embedding"]
-      },
-      "query": {
-        "bool": {
-          "must": must,
-          "should": should,
-          "must_not": mustNot
-        }
-      },
-      "size": 16,
-      "from": (params.page - 1) * 16,
+  if (params.jobcode !== "") {
+    const description = await getDescription(params.jobcode)
+    if (description === "") {
+      throw createHttpError(400, 'Jobcode not found')
     }
-  }
-  const description = await getDescription(params.jobcode)
-  if (description === "") {
-    throw createHttpError(400, 'Jobcode not found')
-  }
-  if (params.global !== true) {
-    must.push({ "match_phrase": { "job_id": params.jobcode } })
+    else {
+      const words = cleanText(description);
+      for (let i = 0; i < words.length; i++) {
+        should.push({ "match_phrase": { "review_body": words[i] } })
+      }
+      if (params.global !== true) {
+        must.push({ "match_phrase": { "job_id": params.jobcode } })
+      }
+    }
   }
   return {
     "_source": {
-      "excludes": [
-        "passage_embedding"]
+      "exclude": ["passage_embedding"]
     },
     "query": {
-      "neural": {
-        "passage_embedding": {
-          "query_text": description,
-          "model_id": "xBArqIwBnT_YCGy5xijZ",
-          "k": 100,
-          "filter": {
-            "bool": {
-              "must": must,
-              "should": should,
-              "must_not": mustNot
-            }
-          }
-        }
+      "bool": {
+        "must": must,
+        "should": should,
+        "must_not": mustNot
       }
     },
     "size": 16,
     "from": (params.page - 1) * 16,
   }
-
 }
 const createNLPQuery = (params: NlpBody) => {
   console.log(params);

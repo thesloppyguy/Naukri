@@ -15,7 +15,7 @@ const SettingsView = () => {
     setLoading(true);
     axios
       .post(
-        "http://localhost:4000/api/logout",
+        "http://localhost:5000/api/logout",
         {},
         {
           withCredentials: true,

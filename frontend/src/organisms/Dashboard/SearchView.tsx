@@ -3,12 +3,12 @@ import Grid from "@mui/material/Grid";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import CandidateCard from "../../molecules/CandidateCard";
-import { Box, Paper, Switch, useTheme } from "@mui/material";
+import { Box, Paper, useTheme } from "@mui/material";
 import CandidateSearch from "../../molecules/CandidateSearch";
 import { SubmitButton } from "../../atoms/SubmitButton";
 import NlpSearch from "../../molecules/NlpSearch";
 import axios from "axios";
-import { SearchForm, NLPForm } from "../../interfaces/search";
+import { ISearch, INLP } from "../../interfaces/Query";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import CandidateDetailsCard from "../../molecules/CandidateDetailsCard";
@@ -42,8 +42,8 @@ const SearchView = () => {
   const theme = useTheme();
   const [check, setCheck] = useState(true);
   const [page, setPage] = useState(1);
-  const [formData, setFormData] = useState<SearchForm>(searchBody);
-  const [nlpData, setNlpData] = useState<NLPForm>(nlpBody);
+  const [formData, setFormData] = useState<ISearch>(searchBody);
+  const [nlpData, setNlpData] = useState<INLP>(nlpBody);
   const [candidateList, setCandidateList] = useState([]);
   const [loading, setLoading] = useState(false);
   const handleSubmit = () => {
@@ -51,7 +51,7 @@ const SearchView = () => {
     if (check) {
       axios
         .post(
-          "http://localhost:4000/api/search/filter",
+          "http://localhost:5000/api/search/filter",
           { ...formData, page: page },
           {
             withCredentials: true,
@@ -67,7 +67,7 @@ const SearchView = () => {
     } else {
       axios
         .post(
-          "http:/localhost:4000/api/search/nlp",
+          "http:/localhost:5000/api/search/nlp",
           { ...nlpData, page: page },
           {
             withCredentials: true,
@@ -120,7 +120,7 @@ const SearchView = () => {
               <SubmitButton onClick={handleClear}> Clear</SubmitButton>
               <SubmitButton onClick={handleSubmit}> Search</SubmitButton>
             </Stack>
-            <Stack
+            {/* <Stack
               direction="row"
               sx={{
                 justifyContent: "space-between",
@@ -130,7 +130,7 @@ const SearchView = () => {
               NLP
               <Switch checked={check} onChange={handleSwitch} />
               FILTER
-            </Stack>
+            </Stack> */}
             <Stack direction="row">
               <Pagination
                 count={10}

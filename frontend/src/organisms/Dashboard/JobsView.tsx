@@ -25,7 +25,7 @@ const JobsView = () => {
     setLoading(true);
     axios
       .post(
-        "http://localhost:4000/api/search/jobs",
+        "http://localhost:5000/api/search/jobs",
         { jobcode: search, page: page },
         {
           withCredentials: true,

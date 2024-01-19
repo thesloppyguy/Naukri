@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ subject }}</title>
+    <style>
+      .approve-button {
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white !important;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .approve-button:hover {
+        background-color: #45a049;
+      }
+
+      .user-info {
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin: 20px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+      }
+
+      .user-info p {
+        margin: 0;
+        padding: 5px 0;
+      }
+
+      .user-info strong {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <p>
+      New user has been registered. Go to
+      <a href="{{ admin_url }}">Admin panel</a> to see it.
+    </p>
+    <div class="user-info">
+      <p><strong>Name:</strong> {{ name }}</p>
+      <p><strong>Email:</strong> {{ email }}</p>
+      <p><strong>Organization:</strong> {{ organization }}</p>
+      <p><strong>Designation:</strong> {{ designation }}</p>
+      <p><strong>Use Case & Function:</strong> {{ usecase_function }}</p>
+    </div>
+    <p>
+      Or, you can simply click on the button below to approve the registration:
+    </p>
+    <a href="{{ activation_url }}" class="approve-button">Approve</a>
+  </body>
+</html>

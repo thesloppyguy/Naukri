@@ -7,9 +7,9 @@ import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
 import { useRouter } from "../hooks/useRouter";
 import Iconify from "../molecules/Iconify";
-import { LoginForm } from "../interfaces/network";
+import { ILogin } from "../interfaces/Polling";
 import { SubmitButton } from "../atoms/SubmitButton";
-import axios from "axios";
+import { pollServer } from "../polling";
 import Divider from "@mui/material/Divider";
 import { UserContext } from "../states/AppContext";
 
@@ -19,7 +19,7 @@ export default function LoginView() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<LoginForm>({
+  const [formData, setFormData] = useState<ILogin>({
     orgId: "",
     email: "",
     password: "",
@@ -27,9 +27,11 @@ export default function LoginView() {
 
   const handleLogin = async () => {
     setLoading(true);
-
+    response = await pollServer("/api/login", formData, {
+      withCredentials: true,
+    });
     axios
-      .post("http://localhost:4000/api/login/", formData, {
+      .post("http://localhost:5000/api/login/", formData, {
         withCredentials: true,
       })
       .then((response) => {

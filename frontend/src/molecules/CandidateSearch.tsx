@@ -101,8 +101,8 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
               sx={{ bgcolor: "white" }}
             >
               <MenuItem value={"any"}>Any Gender</MenuItem>
-              <MenuItem value={"male"}>Male</MenuItem>
-              <MenuItem value={"female"}>Female</MenuItem>
+              <MenuItem value={"Male"}>Male</MenuItem>
+              <MenuItem value={"Female"}>Female</MenuItem>
             </Select>
           </FormControl>
         </Grid>
@@ -226,8 +226,11 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
                     Any {items.Degree}
                   </option>
                   {items.Majors?.map((values) => (
-                    <option value={values} key={values}>
-                      {values}
+                    <option
+                      value={`${items.Degree} ${values}`}
+                      key={`${items.Degree} ${values}`}
+                    >
+                      {`${items.Degree} ${values}`}
                     </option>
                   ))}
                 </optgroup>

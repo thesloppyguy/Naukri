@@ -13,12 +13,12 @@ const OverviewView = () => {
   const [jobsCount, setJobsCount] = useState(0);
   useEffect(() => {
     axios
-      .post("http://localhost:4000/api/search/count", { index: "resumes" })
+      .post("http://localhost:5000/api/search/count", { index: "resumes" })
       .then((response) => {
         setResumeCount(response.data + 12000);
       });
     axios
-      .post("http://localhost:4000/api/search/count", { index: "jobs" })
+      .post("http://localhost:5000/api/search/count", { index: "jobs" })
       .then((response) => {
         setJobsCount(response.data);
       });
@@ -138,7 +138,7 @@ const OverviewView = () => {
                 textAlign: "center",
               }}
             >
-              Candidates Available
+              Jobs Available
             </Typography>
             <Box
               sx={{

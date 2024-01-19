@@ -1,4 +1,4 @@
-export interface SearchForm {
+export interface ISearch {
     keywords: string[],
     must: boolean,
     notKeywords: string[],
@@ -16,6 +16,6 @@ export interface SearchForm {
     jobcode: string,
 }
 
-export interface NLPForm {
+export interface INLP {
     query: string
 }
