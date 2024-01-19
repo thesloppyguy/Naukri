@@ -9,7 +9,7 @@ import { useRouter } from "../hooks/useRouter";
 import Iconify from "../molecules/Iconify";
 import { ILogin } from "../interfaces/Polling";
 import { SubmitButton } from "../atoms/SubmitButton";
-import { pollServer } from "../polling";
+import axios from "axios";
 import Divider from "@mui/material/Divider";
 import { UserContext } from "../states/AppContext";
 
@@ -27,9 +27,7 @@ export default function LoginView() {
 
   const handleLogin = async () => {
     setLoading(true);
-    response = await pollServer("/api/login", formData, {
-      withCredentials: true,
-    });
+
     axios
       .post("http://localhost:5000/api/login/", formData, {
         withCredentials: true,
