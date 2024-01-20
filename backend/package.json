@@ -52,6 +52,7 @@
     "graphql-tag": "^2.12.6",
     "graphql-tools": "^9.0.0",
     "http-errors": "^2.0.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "postmark": "^4.0.2"

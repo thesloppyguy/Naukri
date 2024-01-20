@@ -1,7 +1,7 @@
 import { type RequestHandler } from 'express'
 import createHttpError from 'http-errors'
-import UserModel from '../models/user'
-import OrgnisationModel from '../models/org'
+import UserModel from '../models/User'
+import OrgnisationModel from '../models/Organization'
 import { sendInvite } from '../utils/sendInvite'
 import crypto from 'crypto'
 

@@ -1,17 +1,36 @@
 type User {
-  id: ID
+  _id: ID
+  name: String!
   email: String
   password: String
   role: Role
-  organization: Organization
+  organization: ID
 }
 
 type Organization {
-  id: ID
+  _id: ID
   name: String
   email: String
   url: String
   status: Status
+}
+
+type JwtToken {
+  token: String!
+}
+
+type UserWithToken {
+  _id: String
+  name: String
+  email: String
+  role: Role
+  organization: String
+  userJwtToken: JwtToken
+}
+
+type Error {
+  status: Int
+  message: String
 }
 
 enum Role {
@@ -26,45 +45,83 @@ enum Status {
   Denied
 }
 
-input UserInput {
-  email: String!
-  password: String!
-  role: Role!
-  organization: OrganizationInput!
-}
-
-input OrganizationInput {
+input RegisterInput {
   name: String!
   email: String!
   url: String
-  status: Status!
+}
+
+input LoginInput {
+  organization: String!
+  email: String!
+  password: String!
+}
+
+input ActivateInput {
+  id: ID!
+  password: String!
+}
+
+input ResetPasswordInput {
+  id: ID!
+  password: String!
+}
+
+input InviteUserInput {
+  organization: ID!
+  name: String!
+  email: String!
+  role: Role!
+}
+
+input InviteOrganizationInput {
+  name: String!
+  email: String!
+  url: String
+}
+
+input UpdateStatusInput {
+  id: String
+  status: Status
+}
+
+input UpdateRoleInput {
+  id: String
+  role: Role
+}
+
+type BoolAuth {
+  response: Boolean
+  error: Error
+}
+
+type UserAuth {
+  response: UserWithToken
+  error: Error
+}
+
+type Count {
+  resume: Int
+  job: Int
 }
 
 type Query {
-  record(id: ID!): Record
-  records: [Record]
-  getUser(id: ID!): User
-  getUserByEmail(email: String!, organizationId: ID!): User
+  getCount: Count
+  getOrganizations: [Organization]
   getUserByOrganization(organizationId: ID!): [User]
-  getOrganization(id: ID!): Organization
-  getOrganizationByName(email: String!, name: String!): Organization
 }
 
 type Mutation {
-  createRecord(name: String!, position: String, level: String): Record
-  deleteRecord(id: ID!): Boolean
-  updateRecord(id: ID!, name: String, position: String, level: String): Record
-  createUser(input: UserInput!): User
-  deleteUser(id: ID!): Boolean
-  updateUser(id: ID!, input: UserInput!): User
-  createOrganization(input: OrganizationInput!): Organization
-  deleteOrganization(id: ID!): Boolean
-  updateOrganization(id: ID!, input: OrganizationInput!): Organization
-}
+  registerOrganization(input: RegisterInput!): BoolAuth
+  inviteOrganization(input: InviteOrganizationInput!): BoolAuth
+  deleteOrganization(id: ID!): BoolAuth
+  updateOrganizationStatus(input: UpdateStatusInput!): BoolAuth
 
-type Record {
-  id: ID
-  name: String
-  position: String
-  level: String
+  inviteUser(input: InviteUserInput!): BoolAuth
+  resetPasswordUser(input: ResetPasswordInput!): BoolAuth
+  activateUser(input: ActivateInput!): BoolAuth
+  deleteUser(id: ID!): BoolAuth
+  updateUserRole(input: UpdateRoleInput!): BoolAuth
+
+  loginUser(input: LoginInput!): UserAuth
 }
