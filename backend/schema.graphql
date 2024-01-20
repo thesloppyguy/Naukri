@@ -1,0 +1,58 @@
+type User {
+  id: ID
+  email: String
+  password: String
+  role: Role
+  organization: Organization
+}
+
+type Organization {
+  id: ID
+  name: String
+  email: String
+  url: String
+  status: Status
+}
+
+enum Role {
+  User
+  Admin
+  Maintainer
+}
+
+enum Status {
+  Approved
+  Review
+  Denied
+}
+
+input UserInput {
+  email: String!
+  password: String!
+  role: Role!
+  organization: Organization!
+}
+
+input OrganizationInput {
+  name: String!
+  email: String!
+  url: String
+  status: Status!
+}
+
+type query {
+  getUser(id: ID!): User
+  getUserByEmail(email: String!, organizationId: ID!): User
+  getUserByOrganization(organizationId: ID!): [User]
+  getOrganization(id: ID!): Organization
+  getOrganizationByName(email: String!, name: String!): Organization
+}
+
+type mutation {
+  createUser(input: UserInput!): User
+  deleteUser(id: ID!): Boolean
+  updateUser(id: ID!, input: UserInput!): User
+  createOrganization(input: OrganizationInput!): Organization
+  deleteOrganization(id: ID!): Boolean
+  updateOrganization(id: ID!, input: Organization!): Organization
+}
