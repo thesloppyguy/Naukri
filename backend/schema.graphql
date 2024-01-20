@@ -30,7 +30,7 @@ input UserInput {
   email: String!
   password: String!
   role: Role!
-  organization: Organization!
+  organization: OrganizationInput!
 }
 
 input OrganizationInput {
@@ -40,7 +40,9 @@ input OrganizationInput {
   status: Status!
 }
 
-type query {
+type Query {
+  record(id: ID!): Record
+  records: [Record]
   getUser(id: ID!): User
   getUserByEmail(email: String!, organizationId: ID!): User
   getUserByOrganization(organizationId: ID!): [User]
@@ -48,11 +50,21 @@ type query {
   getOrganizationByName(email: String!, name: String!): Organization
 }
 
-type mutation {
+type Mutation {
+  createRecord(name: String!, position: String, level: String): Record
+  deleteRecord(id: ID!): Boolean
+  updateRecord(id: ID!, name: String, position: String, level: String): Record
   createUser(input: UserInput!): User
   deleteUser(id: ID!): Boolean
   updateUser(id: ID!, input: UserInput!): User
   createOrganization(input: OrganizationInput!): Organization
   deleteOrganization(id: ID!): Boolean
-  updateOrganization(id: ID!, input: Organization!): Organization
+  updateOrganization(id: ID!, input: OrganizationInput!): Organization
+}
+
+type Record {
+  id: ID
+  name: String
+  position: String
+  level: String
 }

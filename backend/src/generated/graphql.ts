@@ -1,5 +1,4 @@
 import { GraphQLResolveInfo } from 'graphql';
-import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -17,63 +16,29 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Organization = {
-  __typename?: 'Organization';
-  email?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  status?: Maybe<Status>;
-  url?: Maybe<Scalars['String']['output']>;
-};
-
-export type OrganizationInput = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  status?: InputMaybe<Status>;
-  url?: InputMaybe<Scalars['String']['input']>;
-};
-
-export enum Role {
-  Admin = 'Admin',
-  Maintainer = 'Maintainer',
-  User = 'User'
-}
-
-export enum Status {
-  Approved = 'Approved',
-  Denied = 'Denied',
-  Review = 'Review'
-}
-
-export type User = {
-  __typename?: 'User';
-  email?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  organization?: Maybe<Organization>;
-  password?: Maybe<Scalars['String']['output']>;
-  role?: Maybe<Role>;
-};
-
-export type UserInput = {
-  email?: InputMaybe<Scalars['String']['input']>;
-  organization?: InputMaybe<Organization>;
-  password?: InputMaybe<Scalars['String']['input']>;
-  role?: InputMaybe<Role>;
-};
-
 export type Mutation = {
-  __typename?: 'mutation';
+  __typename?: 'Mutation';
   createOrganization?: Maybe<Organization>;
+  createRecord?: Maybe<Record>;
   createUser?: Maybe<User>;
   deleteOrganization?: Maybe<Scalars['Boolean']['output']>;
+  deleteRecord?: Maybe<Scalars['Boolean']['output']>;
   deleteUser?: Maybe<Scalars['Boolean']['output']>;
   updateOrganization?: Maybe<Organization>;
+  updateRecord?: Maybe<Record>;
   updateUser?: Maybe<User>;
 };
 
 
 export type MutationCreateOrganizationArgs = {
   input: OrganizationInput;
+};
+
+
+export type MutationCreateRecordArgs = {
+  level?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  position?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -87,6 +52,11 @@ export type MutationDeleteOrganizationArgs = {
 };
 
 
+export type MutationDeleteRecordArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
 };
@@ -94,7 +64,15 @@ export type MutationDeleteUserArgs = {
 
 export type MutationUpdateOrganizationArgs = {
   id: Scalars['ID']['input'];
-  input: Organization;
+  input: OrganizationInput;
+};
+
+
+export type MutationUpdateRecordArgs = {
+  id: Scalars['ID']['input'];
+  level?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  position?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -103,13 +81,31 @@ export type MutationUpdateUserArgs = {
   input: UserInput;
 };
 
+export type Organization = {
+  __typename?: 'Organization';
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<Status>;
+  url?: Maybe<Scalars['String']['output']>;
+};
+
+export type OrganizationInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  status: Status;
+  url?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type Query = {
-  __typename?: 'query';
+  __typename?: 'Query';
   getOrganization?: Maybe<Organization>;
   getOrganizationByName?: Maybe<Organization>;
   getUser?: Maybe<User>;
   getUserByEmail?: Maybe<User>;
   getUserByOrganization?: Maybe<Array<Maybe<User>>>;
+  record?: Maybe<Record>;
+  records?: Maybe<Array<Maybe<Record>>>;
 };
 
 
@@ -139,9 +135,45 @@ export type QueryGetUserByOrganizationArgs = {
   organizationId: Scalars['ID']['input'];
 };
 
-export type AdditionalEntityFields = {
-  path?: InputMaybe<Scalars['String']['input']>;
-  type?: InputMaybe<Scalars['String']['input']>;
+
+export type QueryRecordArgs = {
+  id: Scalars['ID']['input'];
+};
+
+export type Record = {
+  __typename?: 'Record';
+  id?: Maybe<Scalars['ID']['output']>;
+  level?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  position?: Maybe<Scalars['String']['output']>;
+};
+
+export enum Role {
+  Admin = 'Admin',
+  Maintainer = 'Maintainer',
+  User = 'User'
+}
+
+export enum Status {
+  Approved = 'Approved',
+  Denied = 'Denied',
+  Review = 'Review'
+}
+
+export type User = {
+  __typename?: 'User';
+  email?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  organization?: Maybe<Organization>;
+  password?: Maybe<Scalars['String']['output']>;
+  role?: Maybe<Role>;
+};
+
+export type UserInput = {
+  email: Scalars['String']['input'];
+  organization: OrganizationInput;
+  password: Scalars['String']['input'];
+  role: Role;
 };
 
 
@@ -215,80 +247,45 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
-  Organization: ResolverTypeWrapper<Organization>;
-  String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
+  Mutation: ResolverTypeWrapper<{}>;
+  Organization: ResolverTypeWrapper<Organization>;
   OrganizationInput: OrganizationInput;
+  Query: ResolverTypeWrapper<{}>;
+  Record: ResolverTypeWrapper<Record>;
   Role: Role;
   Status: Status;
+  String: ResolverTypeWrapper<Scalars['String']['output']>;
   User: ResolverTypeWrapper<User>;
   UserInput: UserInput;
-  mutation: ResolverTypeWrapper<Mutation>;
-  Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  query: ResolverTypeWrapper<Query>;
-  AdditionalEntityFields: AdditionalEntityFields;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
-  Organization: Organization;
-  String: Scalars['String']['output'];
+  Boolean: Scalars['Boolean']['output'];
   ID: Scalars['ID']['output'];
+  Mutation: {};
+  Organization: Organization;
   OrganizationInput: OrganizationInput;
+  Query: {};
+  Record: Record;
+  String: Scalars['String']['output'];
   User: User;
   UserInput: UserInput;
-  mutation: Mutation;
-  Boolean: Scalars['Boolean']['output'];
-  query: Query;
-  AdditionalEntityFields: AdditionalEntityFields;
 };
 
-export type UnionDirectiveArgs = {
-  discriminatorField?: Maybe<Scalars['String']['input']>;
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
+export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
+  createOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
+  createRecord?: Resolver<Maybe<ResolversTypes['Record']>, ParentType, ContextType, RequireFields<MutationCreateRecordArgs, 'name'>>;
+  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
+  deleteOrganization?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteOrganizationArgs, 'id'>>;
+  deleteRecord?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteRecordArgs, 'id'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  updateOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<MutationUpdateOrganizationArgs, 'id' | 'input'>>;
+  updateRecord?: Resolver<Maybe<ResolversTypes['Record']>, ParentType, ContextType, RequireFields<MutationUpdateRecordArgs, 'id'>>;
+  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'input'>>;
 };
-
-export type UnionDirectiveResolver<Result, Parent, ContextType = any, Args = UnionDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type AbstractEntityDirectiveArgs = {
-  discriminatorField: Scalars['String']['input'];
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
-};
-
-export type AbstractEntityDirectiveResolver<Result, Parent, ContextType = any, Args = AbstractEntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EntityDirectiveArgs = {
-  embedded?: Maybe<Scalars['Boolean']['input']>;
-  additionalFields?: Maybe<Array<Maybe<AdditionalEntityFields>>>;
-};
-
-export type EntityDirectiveResolver<Result, Parent, ContextType = any, Args = EntityDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type ColumnDirectiveArgs = {
-  overrideType?: Maybe<Scalars['String']['input']>;
-};
-
-export type ColumnDirectiveResolver<Result, Parent, ContextType = any, Args = ColumnDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type IdDirectiveArgs = { };
-
-export type IdDirectiveResolver<Result, Parent, ContextType = any, Args = IdDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type LinkDirectiveArgs = {
-  overrideType?: Maybe<Scalars['String']['input']>;
-};
-
-export type LinkDirectiveResolver<Result, Parent, ContextType = any, Args = LinkDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type EmbeddedDirectiveArgs = { };
-
-export type EmbeddedDirectiveResolver<Result, Parent, ContextType = any, Args = EmbeddedDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
-
-export type MapDirectiveArgs = {
-  path: Scalars['String']['input'];
-};
-
-export type MapDirectiveResolver<Result, Parent, ContextType = any, Args = MapDirectiveArgs> = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = {
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -296,6 +293,24 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['Status']>, ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<QueryGetOrganizationArgs, 'id'>>;
+  getOrganizationByName?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<QueryGetOrganizationByNameArgs, 'email' | 'name'>>;
+  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
+  getUserByEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserByEmailArgs, 'email' | 'organizationId'>>;
+  getUserByOrganization?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryGetUserByOrganizationArgs, 'organizationId'>>;
+  record?: Resolver<Maybe<ResolversTypes['Record']>, ParentType, ContextType, RequireFields<QueryRecordArgs, 'id'>>;
+  records?: Resolver<Maybe<Array<Maybe<ResolversTypes['Record']>>>, ParentType, ContextType>;
+};
+
+export type RecordResolvers<ContextType = any, ParentType extends ResolversParentTypes['Record'] = ResolversParentTypes['Record']> = {
+  id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  level?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  position?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -308,41 +323,11 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['mutation'] = ResolversParentTypes['mutation']> = {
-  createOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<MutationCreateOrganizationArgs, 'input'>>;
-  createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'input'>>;
-  deleteOrganization?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteOrganizationArgs, 'id'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
-  updateOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<MutationUpdateOrganizationArgs, 'id' | 'input'>>;
-  updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'id' | 'input'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
-export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['query'] = ResolversParentTypes['query']> = {
-  getOrganization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<QueryGetOrganizationArgs, 'id'>>;
-  getOrganizationByName?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType, RequireFields<QueryGetOrganizationByNameArgs, 'email' | 'name'>>;
-  getUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserArgs, 'id'>>;
-  getUserByEmail?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryGetUserByEmailArgs, 'email' | 'organizationId'>>;
-  getUserByOrganization?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryGetUserByOrganizationArgs, 'organizationId'>>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-};
-
 export type Resolvers<ContextType = any> = {
+  Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
+  Query?: QueryResolvers<ContextType>;
+  Record?: RecordResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  mutation?: MutationResolvers<ContextType>;
-  query?: QueryResolvers<ContextType>;
 };
 
-export type DirectiveResolvers<ContextType = any> = {
-  union?: UnionDirectiveResolver<any, any, ContextType>;
-  abstractEntity?: AbstractEntityDirectiveResolver<any, any, ContextType>;
-  entity?: EntityDirectiveResolver<any, any, ContextType>;
-  column?: ColumnDirectiveResolver<any, any, ContextType>;
-  id?: IdDirectiveResolver<any, any, ContextType>;
-  link?: LinkDirectiveResolver<any, any, ContextType>;
-  embedded?: EmbeddedDirectiveResolver<any, any, ContextType>;
-  map?: MapDirectiveResolver<any, any, ContextType>;
-};
-
-import { ObjectId } from 'mongodb';
