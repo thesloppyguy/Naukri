@@ -1,7 +1,7 @@
 import { RegisterBody, ActivateBody, ResetPasswordBody, LoginBody } from "../interfaces/user"
 import { type RequestHandler } from 'express'
 import createHttpError from 'http-errors'
-import UserModel from '../models/User'
+import UserModel from '../models/user'
 import OrgnisationModel from '../models/Organization'
 import bcrypt from 'bcrypt'
 import { sendInvite } from "../utils/sendInvite"

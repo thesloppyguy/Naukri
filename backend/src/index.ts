@@ -59,7 +59,7 @@ mongoose
       );
 
       httpServer.listen({ port: port }, () => {
-        console.log(`🚀 Server ready at http://localhost:5000/`);
+        console.log(`🚀 Server ready at http://localhost:${port}/`);
       });
     });
 

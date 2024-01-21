@@ -9,7 +9,7 @@ const resolvers: Resolvers = {
       return await OrgnisationModel.find({})
     },
     getUserByOrganization: async (_, { organizationId }) => {
-      return await OrgnisationModel.findById(organizationId)
+      return await UserModel.find({organization:organizationId})
     }
   },
   Mutation: {
@@ -40,7 +40,7 @@ const resolvers: Resolvers = {
           name,
           contactEmail,
           url,
-          status: 'denied'
+          status: 'Review'
         })
         // await sendInvite()
         return {
@@ -50,7 +50,7 @@ const resolvers: Resolvers = {
         return {
           error: {
             status: 500,
-            message: "Internal Server Error"
+            message: `Internal Server Error: ${error}`
           }
         }
       }
@@ -108,6 +108,7 @@ const resolvers: Resolvers = {
         }
         const user = OrgnisationModel.findById(id);
         if (!user) { return { response: false } }
+        await UserModel.deleteMany({organization: id})
         await OrgnisationModel.deleteOne({ _id: id })
         return { response: true }
       } catch (error) {
@@ -131,14 +132,25 @@ const resolvers: Resolvers = {
             }
           }
         }
-
-        const result = await OrgnisationModel.updateOne({ _id: id }, { $set: { status: status } })
-        if (result.modifiedCount == 0) {
+        const organization = await OrgnisationModel.findById(id)
+        if (organization == null) {
           return {
             error: {
               status: 400,
               message: "Organization not Found"
             }
+          }
+        }
+        await OrgnisationModel.updateOne({ _id: id }, { $set: { status: status } })
+        if(status==='Approved') {
+          const user = await UserModel.findOne({email: organization?.contactEmail, organization: organization?._id })
+          if (user==null) {
+            UserModel.create({
+              name: organization?.name,
+              email: organization?.contactEmail,
+              role: "Admin",
+              organization: organization
+            })
           }
         }
         return {
@@ -303,8 +315,39 @@ const resolvers: Resolvers = {
       }
     },
     updateUserRole: async (_, { input }) => {
-      console.log(input)
-      return { response: true }
+      const id = input.id
+      const role = input.role
+      try {
+        if ((id == null) || (role == null)) {
+          return {
+            error: {
+              status: 400,
+              message: "Parameter Missing"
+            }
+          }
+        }
+        const user = await UserModel.findById(id)
+        if (user == null) {
+          return {
+            error: {
+              status: 400,
+              message: "User not Found"
+            }
+          }
+        }
+        await UserModel.updateOne({ _id: id }, { $set: { role: role } })
+        // Update Jwt token
+        return {
+          response: true
+        }
+      } catch (error) {
+        return {
+          error: {
+            status: 500,
+            message: "Internal Server Error"
+          }
+        }
+      }
     }
   }
 }
