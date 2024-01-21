@@ -15,6 +15,14 @@ type Organization {
   status: Status
 }
 
+type UserData {
+  name: String!
+  email: String
+  password: String
+  role: Role
+  organization: Organization
+}
+
 type JwtToken {
   token: String!
 }
@@ -80,6 +88,11 @@ input InviteOrganizationInput {
   url: String
 }
 
+input ForgotPasswordInput {
+  name: String!
+  email: String!
+}
+
 input UpdateStatusInput {
   id: String
   status: Status
@@ -106,6 +119,8 @@ type Count {
 }
 
 type Query {
+  getUserData: UserData
+
   getCount: Count
   getOrganizations: [Organization]
   getUserByOrganization(organizationId: ID!): [User]
@@ -118,6 +133,7 @@ type Mutation {
   updateOrganizationStatus(input: UpdateStatusInput!): BoolAuth
 
   inviteUser(input: InviteUserInput!): BoolAuth
+  forgotPassword(input: ForgotPasswordInput!): BoolAuth
   resetPasswordUser(input: ResetPasswordInput!): BoolAuth
   activateUser(input: ActivateInput!): BoolAuth
   deleteUser(id: ID!): BoolAuth

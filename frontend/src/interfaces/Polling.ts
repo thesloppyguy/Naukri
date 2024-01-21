@@ -1,19 +1,18 @@
 export interface IOrganisation {
-    _id: string
+    id: string
     name: string
     contactEmail: string
     url: string
     status: 'allowed' | 'review' | 'denied'
-    __v: number
 }
 
 export interface IUser {
-    _id: string,
+    id: string
+    name: string
     email: string
     password: string
     role: 'User' | 'Admin' | 'Maintainer'
     organization: IOrganisation
-    __v: number
 }
 
 export interface IResetPassword {

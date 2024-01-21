@@ -1,0 +1,69 @@
+mutation registerOrganization($input: RegisterInput!) {
+  registerOrganization(input: $input) {
+    response
+  }
+}
+
+mutation inviteOrganization($input: InviteOrganizationInput!) {
+  inviteOrganization(input: $input) {
+    response
+  }
+}
+
+mutation deleteOrganization($id: ID!) {
+  deleteOrganization(id: $id) {
+    response
+  }
+}
+
+mutation updateOrganizationStatus($input: UpdateStatusInput!) {
+  updateOrganizationStatus(input: $input) {
+    response
+  }
+}
+
+mutation inviteUser($input: InviteUserInput!) {
+  inviteUser(input: $input) {
+    response
+  }
+}
+
+mutation forgotPassword($input: ForgotPasswordInput!) {
+  forgotPassword(input: $input) {
+    response
+  }
+}
+
+mutation resetPasswordUser($input: ResetPasswordInput!) {
+  resetPasswordUser(input: $input) {
+    response
+  }
+}
+
+mutation activateUser($input: ActivateInput!) {
+  activateUser(input: $input) {
+    response
+  }
+}
+
+mutation deleteUser($id: ID!) {
+  deleteUser(id: $id) {
+    response
+  }
+}
+
+mutation updateUserRole($input: UpdateRoleInput!) {
+  updateUserRole(input: $input) {
+    response
+  }
+}
+
+mutation loginUser($input: LoginInput!) {
+  loginUser(input: $input) {
+    response {
+      userJwtToken {
+        token
+      }
+    }
+  }
+}

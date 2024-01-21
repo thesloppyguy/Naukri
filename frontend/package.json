@@ -6,6 +6,7 @@
     "@apollo/client": "^3.8.9",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.1.0",
     "@iconify/react": "^4.1.1",
     "@mui/icons-material": "^5.15.3",
     "@mui/lab": "^5.0.0-alpha.160",
@@ -23,6 +24,7 @@
     "apollo-upload-client": "^18.0.1",
     "axios": "^1.6.5",
     "framer-motion": "^10.18.0",
+    "graphql": "^16.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropdown-tree-select": "^2.8.0",
@@ -40,7 +42,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "codegen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
@@ -61,8 +64,13 @@
     ]
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "5.0.0",
+    "@graphql-codegen/typescript": "^4.0.1",
+    "@graphql-codegen/typescript-operations": "^4.0.1",
+    "@graphql-codegen/typescript-resolvers": "^4.0.1",
     "dotenv": "^16.3.1",
     "eslint": "^8.56.0",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "@graphql-codegen/client-preset": "4.1.0"
   }
 }

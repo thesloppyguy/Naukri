@@ -7,6 +7,12 @@ import ReactDOM from "react-dom/client";
 import Router from "./router";
 import "./index.css";
 import { grey } from "@mui/material/colors";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+} from "@apollo/client";
 
 const theme = createTheme({
   palette: {
@@ -80,14 +86,23 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
+const client = new ApolloClient({
+  uri: process.env.BASE_URL
+    ? process.env.BASE_URL
+    : "http://localhost:3000/graphql",
+  cache: new InMemoryCache(),
+});
+
 root.render(
   <HelmetProvider>
     <Suspense>
-      <ThemeProvider theme={theme}>
-        <React.StrictMode>
-          <RouterProvider router={Router} />
-        </React.StrictMode>
-      </ThemeProvider>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <React.StrictMode>
+            <RouterProvider router={Router} />
+          </React.StrictMode>
+        </ThemeProvider>
+      </ApolloProvider>
     </Suspense>
   </HelmetProvider>
 );

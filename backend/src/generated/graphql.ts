@@ -27,10 +27,21 @@ export type BoolAuth = {
   response?: Maybe<Scalars['Boolean']['output']>;
 };
 
+export type Count = {
+  __typename?: 'Count';
+  job?: Maybe<Scalars['Int']['output']>;
+  resume?: Maybe<Scalars['Int']['output']>;
+};
+
 export type Error = {
   __typename?: 'Error';
   message?: Maybe<Scalars['String']['output']>;
   status?: Maybe<Scalars['Int']['output']>;
+};
+
+export type ForgotPasswordInput = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
 };
 
 export type InviteOrganizationInput = {
@@ -62,6 +73,7 @@ export type Mutation = {
   activateUser?: Maybe<BoolAuth>;
   deleteOrganization?: Maybe<BoolAuth>;
   deleteUser?: Maybe<BoolAuth>;
+  forgotPassword?: Maybe<BoolAuth>;
   inviteOrganization?: Maybe<BoolAuth>;
   inviteUser?: Maybe<BoolAuth>;
   loginUser?: Maybe<UserAuth>;
@@ -84,6 +96,11 @@ export type MutationDeleteOrganizationArgs = {
 
 export type MutationDeleteUserArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationForgotPasswordArgs = {
+  input: ForgotPasswordInput;
 };
 
 
@@ -132,6 +149,7 @@ export type Organization = {
 
 export type Query = {
   __typename?: 'Query';
+  getCount?: Maybe<Count>;
   getOrganizations?: Maybe<Array<Maybe<Organization>>>;
   getUserByOrganization?: Maybe<Array<Maybe<User>>>;
 };
@@ -274,7 +292,9 @@ export type ResolversTypes = {
   ActivateInput: ActivateInput;
   BoolAuth: ResolverTypeWrapper<BoolAuth>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Count: ResolverTypeWrapper<Count>;
   Error: ResolverTypeWrapper<Error>;
+  ForgotPasswordInput: ForgotPasswordInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   InviteOrganizationInput: InviteOrganizationInput;
@@ -301,7 +321,9 @@ export type ResolversParentTypes = {
   ActivateInput: ActivateInput;
   BoolAuth: BoolAuth;
   Boolean: Scalars['Boolean']['output'];
+  Count: Count;
   Error: Error;
+  ForgotPasswordInput: ForgotPasswordInput;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   InviteOrganizationInput: InviteOrganizationInput;
@@ -327,6 +349,12 @@ export type BoolAuthResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type CountResolvers<ContextType = any, ParentType extends ResolversParentTypes['Count'] = ResolversParentTypes['Count']> = {
+  job?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  resume?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']> = {
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -342,6 +370,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   activateUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationActivateUserArgs, 'input'>>;
   deleteOrganization?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationDeleteOrganizationArgs, 'id'>>;
   deleteUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  forgotPassword?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'input'>>;
   inviteOrganization?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationInviteOrganizationArgs, 'input'>>;
   inviteUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationInviteUserArgs, 'input'>>;
   loginUser?: Resolver<Maybe<ResolversTypes['UserAuth']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
@@ -361,6 +390,7 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getCount?: Resolver<Maybe<ResolversTypes['Count']>, ParentType, ContextType>;
   getOrganizations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Organization']>>>, ParentType, ContextType>;
   getUserByOrganization?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryGetUserByOrganizationArgs, 'organizationId'>>;
 };
@@ -393,6 +423,7 @@ export type UserWithTokenResolvers<ContextType = any, ParentType extends Resolve
 
 export type Resolvers<ContextType = any> = {
   BoolAuth?: BoolAuthResolvers<ContextType>;
+  Count?: CountResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
   JwtToken?: JwtTokenResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
