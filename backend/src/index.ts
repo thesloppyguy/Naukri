@@ -31,7 +31,7 @@ mongoose
   .then(() => {
     console.log('Mongoose connected')
     app.use(cors({
-      origin: "http://localhost:3000",
+      origin: env.DOMAIN_URL,
       credentials: true
     }))
 
