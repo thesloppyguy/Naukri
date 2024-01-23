@@ -21,16 +21,59 @@ export type ActivateInput = {
   password: Scalars['String']['input'];
 };
 
-export type BoolAuth = {
-  __typename?: 'BoolAuth';
-  error?: Maybe<Error>;
-  response?: Maybe<Scalars['Boolean']['output']>;
+export type Candidate = {
+  __typename?: 'Candidate';
+  candidate_age?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  current_address?: Maybe<Scalars['String']['output']>;
+  date_of_birth?: Maybe<Scalars['String']['output']>;
+  education?: Maybe<Array<Maybe<Education>>>;
+  email?: Maybe<Scalars['String']['output']>;
+  employer_id?: Maybe<Scalars['String']['output']>;
+  file_name?: Maybe<Scalars['String']['output']>;
+  first_name?: Maybe<Scalars['String']['output']>;
+  fresher?: Maybe<Scalars['String']['output']>;
+  gender?: Maybe<Scalars['String']['output']>;
+  job_code_title?: Maybe<Scalars['String']['output']>;
+  job_id?: Maybe<Scalars['String']['output']>;
+  languages?: Maybe<Scalars['String']['output']>;
+  last_name?: Maybe<Scalars['String']['output']>;
+  permanent_address?: Maybe<Scalars['String']['output']>;
+  phone?: Maybe<Scalars['String']['output']>;
+  total_work_experience?: Maybe<Scalars['Int']['output']>;
+  work_experience?: Maybe<Array<Maybe<Work>>>;
+};
+
+export type CandidateQuery = {
+  currentCompany?: InputMaybe<Scalars['String']['input']>;
+  currentDesignation?: InputMaybe<Scalars['String']['input']>;
+  department?: InputMaybe<Scalars['String']['input']>;
+  expMax?: InputMaybe<Scalars['String']['input']>;
+  expMin?: InputMaybe<Scalars['String']['input']>;
+  gender?: InputMaybe<Scalars['String']['input']>;
+  global?: InputMaybe<Scalars['Boolean']['input']>;
+  industry?: InputMaybe<Scalars['String']['input']>;
+  jobcode?: InputMaybe<Scalars['String']['input']>;
+  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  must?: InputMaybe<Scalars['Boolean']['input']>;
+  notKeywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  pdCourse?: InputMaybe<Scalars['String']['input']>;
+  pgCourse?: InputMaybe<Scalars['String']['input']>;
+  ugCourse?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Count = {
   __typename?: 'Count';
   job?: Maybe<Scalars['Int']['output']>;
   resume?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Education = {
+  __typename?: 'Education';
+  degree_name?: Maybe<Scalars['String']['output']>;
+  degree_type?: Maybe<Scalars['String']['output']>;
+  institute_name?: Maybe<Scalars['String']['output']>;
 };
 
 export type Error = {
@@ -53,8 +96,14 @@ export type InviteOrganizationInput = {
 export type InviteUserInput = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  organization: Scalars['ID']['input'];
   role: Role;
+};
+
+export type Job = {
+  __typename?: 'Job';
+  description?: Maybe<Scalars['String']['output']>;
+  job_code_title?: Maybe<Scalars['String']['output']>;
+  job_id?: Maybe<Scalars['String']['output']>;
 };
 
 export type JwtToken = {
@@ -70,17 +119,17 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  activateUser?: Maybe<BoolAuth>;
-  deleteOrganization?: Maybe<BoolAuth>;
-  deleteUser?: Maybe<BoolAuth>;
-  forgotPassword?: Maybe<BoolAuth>;
-  inviteOrganization?: Maybe<BoolAuth>;
-  inviteUser?: Maybe<BoolAuth>;
-  loginUser?: Maybe<UserAuth>;
-  registerOrganization?: Maybe<BoolAuth>;
-  resetPasswordUser?: Maybe<BoolAuth>;
-  updateOrganizationStatus?: Maybe<BoolAuth>;
-  updateUserRole?: Maybe<BoolAuth>;
+  activateUser?: Maybe<Scalars['Boolean']['output']>;
+  deleteOrganization?: Maybe<Scalars['Boolean']['output']>;
+  deleteUser?: Maybe<Scalars['Boolean']['output']>;
+  forgotPassword?: Maybe<Scalars['Boolean']['output']>;
+  inviteOrganization?: Maybe<Scalars['Boolean']['output']>;
+  inviteUser?: Maybe<Scalars['Boolean']['output']>;
+  loginUser?: Maybe<UserWithToken>;
+  registerOrganization?: Maybe<Scalars['Boolean']['output']>;
+  resetPasswordUser?: Maybe<Scalars['Boolean']['output']>;
+  updateOrganizationStatus?: Maybe<Scalars['Boolean']['output']>;
+  updateUserRole?: Maybe<Scalars['Boolean']['output']>;
 };
 
 
@@ -149,14 +198,24 @@ export type Organization = {
 
 export type Query = {
   __typename?: 'Query';
+  getCandidate?: Maybe<Array<Maybe<Candidate>>>;
   getCount?: Maybe<Count>;
+  getJob?: Maybe<Array<Maybe<Job>>>;
+  getJobs?: Maybe<Array<Maybe<Job>>>;
   getOrganizations?: Maybe<Array<Maybe<Organization>>>;
   getUserByOrganization?: Maybe<Array<Maybe<User>>>;
+  getUserData?: Maybe<UserData>;
 };
 
 
-export type QueryGetUserByOrganizationArgs = {
-  organizationId: Scalars['ID']['input'];
+export type QueryGetCandidateArgs = {
+  page?: InputMaybe<Scalars['Int']['input']>;
+  query?: InputMaybe<CandidateQuery>;
+};
+
+
+export type QueryGetJobArgs = {
+  query?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type RegisterInput = {
@@ -202,10 +261,13 @@ export type User = {
   role?: Maybe<Role>;
 };
 
-export type UserAuth = {
-  __typename?: 'UserAuth';
-  error?: Maybe<Error>;
-  response?: Maybe<UserWithToken>;
+export type UserData = {
+  __typename?: 'UserData';
+  _id?: Maybe<Scalars['ID']['output']>;
+  email?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  organization?: Maybe<Organization>;
+  role?: Maybe<Role>;
 };
 
 export type UserWithToken = {
@@ -213,9 +275,17 @@ export type UserWithToken = {
   _id?: Maybe<Scalars['String']['output']>;
   email?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
-  organization?: Maybe<Scalars['String']['output']>;
+  organization?: Maybe<Organization>;
   role?: Maybe<Role>;
   userJwtToken?: Maybe<JwtToken>;
+};
+
+export type Work = {
+  __typename?: 'Work';
+  company?: Maybe<Scalars['String']['output']>;
+  date_of_joining?: Maybe<Scalars['String']['output']>;
+  date_of_leaving?: Maybe<Scalars['String']['output']>;
+  designation?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -290,15 +360,18 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
   ActivateInput: ActivateInput;
-  BoolAuth: ResolverTypeWrapper<BoolAuth>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  Candidate: ResolverTypeWrapper<Candidate>;
+  CandidateQuery: CandidateQuery;
   Count: ResolverTypeWrapper<Count>;
+  Education: ResolverTypeWrapper<Education>;
   Error: ResolverTypeWrapper<Error>;
   ForgotPasswordInput: ForgotPasswordInput;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   InviteOrganizationInput: InviteOrganizationInput;
   InviteUserInput: InviteUserInput;
+  Job: ResolverTypeWrapper<Job>;
   JwtToken: ResolverTypeWrapper<JwtToken>;
   LoginInput: LoginInput;
   Mutation: ResolverTypeWrapper<{}>;
@@ -312,22 +385,26 @@ export type ResolversTypes = {
   UpdateRoleInput: UpdateRoleInput;
   UpdateStatusInput: UpdateStatusInput;
   User: ResolverTypeWrapper<User>;
-  UserAuth: ResolverTypeWrapper<UserAuth>;
+  UserData: ResolverTypeWrapper<UserData>;
   UserWithToken: ResolverTypeWrapper<UserWithToken>;
+  Work: ResolverTypeWrapper<Work>;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
   ActivateInput: ActivateInput;
-  BoolAuth: BoolAuth;
   Boolean: Scalars['Boolean']['output'];
+  Candidate: Candidate;
+  CandidateQuery: CandidateQuery;
   Count: Count;
+  Education: Education;
   Error: Error;
   ForgotPasswordInput: ForgotPasswordInput;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   InviteOrganizationInput: InviteOrganizationInput;
   InviteUserInput: InviteUserInput;
+  Job: Job;
   JwtToken: JwtToken;
   LoginInput: LoginInput;
   Mutation: {};
@@ -339,13 +416,31 @@ export type ResolversParentTypes = {
   UpdateRoleInput: UpdateRoleInput;
   UpdateStatusInput: UpdateStatusInput;
   User: User;
-  UserAuth: UserAuth;
+  UserData: UserData;
   UserWithToken: UserWithToken;
+  Work: Work;
 };
 
-export type BoolAuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['BoolAuth'] = ResolversParentTypes['BoolAuth']> = {
-  error?: Resolver<Maybe<ResolversTypes['Error']>, ParentType, ContextType>;
-  response?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+export type CandidateResolvers<ContextType = any, ParentType extends ResolversParentTypes['Candidate'] = ResolversParentTypes['Candidate']> = {
+  candidate_age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  current_address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  date_of_birth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  education?: Resolver<Maybe<Array<Maybe<ResolversTypes['Education']>>>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  employer_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  file_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  first_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  fresher?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  job_code_title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  job_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  languages?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  last_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  permanent_address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  total_work_experience?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  work_experience?: Resolver<Maybe<Array<Maybe<ResolversTypes['Work']>>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -355,9 +450,23 @@ export type CountResolvers<ContextType = any, ParentType extends ResolversParent
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type EducationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Education'] = ResolversParentTypes['Education']> = {
+  degree_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  degree_type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  institute_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type ErrorResolvers<ContextType = any, ParentType extends ResolversParentTypes['Error'] = ResolversParentTypes['Error']> = {
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type JobResolvers<ContextType = any, ParentType extends ResolversParentTypes['Job'] = ResolversParentTypes['Job']> = {
+  description?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  job_code_title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  job_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -367,17 +476,17 @@ export type JwtTokenResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  activateUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationActivateUserArgs, 'input'>>;
-  deleteOrganization?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationDeleteOrganizationArgs, 'id'>>;
-  deleteUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
-  forgotPassword?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'input'>>;
-  inviteOrganization?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationInviteOrganizationArgs, 'input'>>;
-  inviteUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationInviteUserArgs, 'input'>>;
-  loginUser?: Resolver<Maybe<ResolversTypes['UserAuth']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
-  registerOrganization?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationRegisterOrganizationArgs, 'input'>>;
-  resetPasswordUser?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationResetPasswordUserArgs, 'input'>>;
-  updateOrganizationStatus?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationUpdateOrganizationStatusArgs, 'input'>>;
-  updateUserRole?: Resolver<Maybe<ResolversTypes['BoolAuth']>, ParentType, ContextType, RequireFields<MutationUpdateUserRoleArgs, 'input'>>;
+  activateUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationActivateUserArgs, 'input'>>;
+  deleteOrganization?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteOrganizationArgs, 'id'>>;
+  deleteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'id'>>;
+  forgotPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationForgotPasswordArgs, 'input'>>;
+  inviteOrganization?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationInviteOrganizationArgs, 'input'>>;
+  inviteUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationInviteUserArgs, 'input'>>;
+  loginUser?: Resolver<Maybe<ResolversTypes['UserWithToken']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'input'>>;
+  registerOrganization?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationRegisterOrganizationArgs, 'input'>>;
+  resetPasswordUser?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationResetPasswordUserArgs, 'input'>>;
+  updateOrganizationStatus?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationUpdateOrganizationStatusArgs, 'input'>>;
+  updateUserRole?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationUpdateUserRoleArgs, 'input'>>;
 };
 
 export type OrganizationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Organization'] = ResolversParentTypes['Organization']> = {
@@ -390,9 +499,13 @@ export type OrganizationResolvers<ContextType = any, ParentType extends Resolver
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
+  getCandidate?: Resolver<Maybe<Array<Maybe<ResolversTypes['Candidate']>>>, ParentType, ContextType, Partial<QueryGetCandidateArgs>>;
   getCount?: Resolver<Maybe<ResolversTypes['Count']>, ParentType, ContextType>;
+  getJob?: Resolver<Maybe<Array<Maybe<ResolversTypes['Job']>>>, ParentType, ContextType, Partial<QueryGetJobArgs>>;
+  getJobs?: Resolver<Maybe<Array<Maybe<ResolversTypes['Job']>>>, ParentType, ContextType>;
   getOrganizations?: Resolver<Maybe<Array<Maybe<ResolversTypes['Organization']>>>, ParentType, ContextType>;
-  getUserByOrganization?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType, RequireFields<QueryGetUserByOrganizationArgs, 'organizationId'>>;
+  getUserByOrganization?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
+  getUserData?: Resolver<Maybe<ResolversTypes['UserData']>, ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -405,9 +518,12 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
-export type UserAuthResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserAuth'] = ResolversParentTypes['UserAuth']> = {
-  error?: Resolver<Maybe<ResolversTypes['Error']>, ParentType, ContextType>;
-  response?: Resolver<Maybe<ResolversTypes['UserWithToken']>, ParentType, ContextType>;
+export type UserDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserData'] = ResolversParentTypes['UserData']> = {
+  _id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType>;
+  role?: Resolver<Maybe<ResolversTypes['Role']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -415,22 +531,33 @@ export type UserWithTokenResolvers<ContextType = any, ParentType extends Resolve
   _id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  organization?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  organization?: Resolver<Maybe<ResolversTypes['Organization']>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['Role']>, ParentType, ContextType>;
   userJwtToken?: Resolver<Maybe<ResolversTypes['JwtToken']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type WorkResolvers<ContextType = any, ParentType extends ResolversParentTypes['Work'] = ResolversParentTypes['Work']> = {
+  company?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  date_of_joining?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  date_of_leaving?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  designation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type Resolvers<ContextType = any> = {
-  BoolAuth?: BoolAuthResolvers<ContextType>;
+  Candidate?: CandidateResolvers<ContextType>;
   Count?: CountResolvers<ContextType>;
+  Education?: EducationResolvers<ContextType>;
   Error?: ErrorResolvers<ContextType>;
+  Job?: JobResolvers<ContextType>;
   JwtToken?: JwtTokenResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Organization?: OrganizationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
-  UserAuth?: UserAuthResolvers<ContextType>;
+  UserData?: UserDataResolvers<ContextType>;
   UserWithToken?: UserWithTokenResolvers<ContextType>;
+  Work?: WorkResolvers<ContextType>;
 };
 

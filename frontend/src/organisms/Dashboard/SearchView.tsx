@@ -1,17 +1,24 @@
-import Container from "@mui/material/Container";
-import Grid from "@mui/material/Grid";
-import Pagination from "@mui/material/Pagination";
-import Stack from "@mui/material/Stack";
-import CandidateCard from "../../molecules/CandidateCard";
-import { Box, Paper, useTheme } from "@mui/material";
+import {
+  Container,
+  Grid,
+  Pagination,
+  Stack,
+  Box,
+  Paper,
+  useTheme,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
+import CandidateDetailsCard from "../../molecules/CandidateDetailsCard";
 import CandidateSearch from "../../molecules/CandidateSearch";
-import { SubmitButton } from "../../atoms/SubmitButton";
+import CandidateCard from "../../molecules/CandidateCard";
 import NlpSearch from "../../molecules/NlpSearch";
-import axios from "axios";
+import { SubmitButton } from "../../atoms/SubmitButton";
 import { ISearch, INLP } from "../../interfaces/Query";
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import CandidateDetailsCard from "../../molecules/CandidateDetailsCard";
+import axios from "axios";
+import { Candidate, useGetCandidateLazyQuery } from "../../generated/graphql";
 
 const searchBody = {
   keywords: [] as string[],
@@ -37,50 +44,35 @@ const nlpBody = {
 };
 
 const SearchView = () => {
-  const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState<any>();
-  const theme = useTheme();
   const [check, setCheck] = useState(true);
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState<ISearch>(searchBody);
   const [nlpData, setNlpData] = useState<INLP>(nlpBody);
-  const [candidateList, setCandidateList] = useState([]);
+  const [candidateList, setCandidateList] = useState<Candidate[]>([]);
   const [loading, setLoading] = useState(false);
+  const [getCandidate, { data, error }] = useGetCandidateLazyQuery({
+    fetchPolicy: "no-cache",
+    onCompleted() {
+      setCandidateList(data?.getCandidate as Candidate[]);
+      console.log(candidateList);
+      setLoading(false);
+    },
+    onError(error) {
+      setLoading(false);
+    },
+  });
+
   const handleSubmit = () => {
     setLoading(true);
     if (check) {
-      axios
-        .post(
-          "http://localhost:5000/api/search/filter",
-          { ...formData, page: page },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          setCandidateList(response.data.hits.hits);
-          console.log(candidateList);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } else {
-      axios
-        .post(
-          "http:/localhost:5000/api/search/nlp",
-          { ...nlpData, page: page },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((response) => {
-          setCandidateList(response.data.hits.hits);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      getCandidate({
+        variables: {
+          query: formData,
+          page: page,
+        },
+      });
     }
-    setLoading(false);
   };
 
   const handlePageChange = (event: any, value: any) => {
@@ -95,6 +87,7 @@ const SearchView = () => {
     setCheck(!check);
   };
   useEffect(() => {
+    console.log();
     handleSubmit();
   }, [page]);
 
@@ -118,7 +111,18 @@ const SearchView = () => {
           >
             <Stack direction="row" sx={{ padding: "10px", gap: "10px" }}>
               <SubmitButton onClick={handleClear}> Clear</SubmitButton>
-              <SubmitButton onClick={handleSubmit}> Search</SubmitButton>
+              <SubmitButton
+                onClick={() => {
+                  setPage(1);
+                  handleSubmit();
+                }}
+              >
+                {loading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  "Search"
+                )}
+              </SubmitButton>
             </Stack>
             {/* <Stack
               direction="row"
@@ -135,7 +139,7 @@ const SearchView = () => {
               <Pagination
                 count={10}
                 size="small"
-                defaultPage={page}
+                defaultValue={page}
                 onChange={handlePageChange}
               />
             </Stack>
@@ -145,7 +149,7 @@ const SearchView = () => {
               <Grid container>
                 {candidateList.map((candidate: any) => (
                   <Grid
-                    key={candidate._source.employee_id}
+                    key={candidate.employee_id}
                     xs={12}
                     sm={6}
                     md={3}
@@ -154,13 +158,15 @@ const SearchView = () => {
                     }}
                   >
                     <motion.div onClick={() => setSelected(candidate)}>
-                      <CandidateCard candidate={candidate._source} />
+                      <CandidateCard candidate={candidate} />
                     </motion.div>
                   </Grid>
                 ))}
               </Grid>
             ) : (
-              <></>
+              <Typography variant="h3" sx={{ textAlign: "center" }}>
+                No candidate Found
+              </Typography>
             )}
           </Stack>
         </Container>
@@ -170,7 +176,7 @@ const SearchView = () => {
             {selected && (
               <Paper>
                 <CandidateDetailsCard
-                  candidate={selected._source}
+                  candidate={selected}
                   setSelected={setSelected}
                 />
               </Paper>

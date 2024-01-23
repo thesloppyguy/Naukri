@@ -1,16 +1,46 @@
-import React, { createContext, useState, useMemo, useContext } from "react";
-import { IUser } from "../interfaces/Polling";
+import {
+  FunctionComponent,
+  createContext,
+  useContext,
+  useReducer,
+} from "react";
+import { IUser, UserAction } from "../interfaces/Polling";
+import { UserReducer, userInitialState } from "./UserReducer";
+const ContextState = createContext([]);
 
-interface IUserContext {
-  user: IUser | null;
-  setUser: React.Dispatch<React.SetStateAction<IUserContext["user"]>>;
+interface IDispatchParams {
+  type: UserAction;
+  payload: IUser;
 }
 
-export const UserContext = createContext<IUserContext | null>(null);
-
-export const AppProvider = ({ children }: React.PropsWithChildren<{}>) => {
-  const [user, setUser] = useState<IUserContext["user"]>(null);
-  const value = useMemo(() => ({ user, setUser }), [user]);
-
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+const useApp = () => {
+  const context = useContext(ContextState);
+  if (!context) {
+    throw new Error(`useApp must be used within a AppProvider`);
+  }
+  return context as unknown as [IUser, ({ ...args }: IDispatchParams) => void];
 };
+
+const AppProvider: FunctionComponent<any> = (props) => {
+  const [state, dispatch] = useReducer(UserReducer, userInitialState);
+  return (
+    <ContextState.Provider
+      value={
+        [state, dispatch] as unknown as [
+          IUser,
+          ({ ...args }: IDispatchParams) => void
+        ]
+      }
+      {...props}
+    />
+  );
+};
+
+export { useApp, AppProvider };
+
+// export const AppProvider = (FunctionComponent<any> = (props) => {
+//   const [user, setUser] = useState<IUserContext["user"]>(null);
+//   const value = useMemo(() => ({ user, setUser }), [user]);
+
+//   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+// });

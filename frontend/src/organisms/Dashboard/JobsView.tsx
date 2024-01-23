@@ -9,39 +9,55 @@ import axios from "axios";
 import Typography from "@mui/material/Typography";
 import { AnimatePresence, motion } from "framer-motion";
 import JobDetailsCard from "../../molecules/JobDetailsCard";
+import {
+  useGetJobsLazyQuery,
+  useGetJobLazyQuery,
+  Job,
+} from "../../generated/graphql";
+import { CircularProgress } from "@mui/material";
 
 const JobsView = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<any>();
   const [loading, setLoading] = useState(false);
-  const [jobList, setJobList] = useState([]);
+  const [jobList, setJobList] = useState<Job[]>([]);
   const [page, setPage] = useState(1);
+  const [getJobs, { data: jobsdata, error: jobsError }] = useGetJobsLazyQuery({
+    onCompleted() {
+      setJobList(jobsdata?.getJobs as Job[]);
+      setLoading(false);
+    },
+    onError(jobsError) {
+      setLoading(false);
+    },
+  });
+
+  const [getjob, { data: jobData, error: jobError }] = useGetJobLazyQuery({
+    fetchPolicy: "no-cache",
+    onCompleted() {
+      setJobList(jobData?.getJob as Job[]);
+      console.log(jobData);
+      setLoading(false);
+    },
+    onError(jobError) {
+      setLoading(false);
+    },
+  });
 
   const handlePageChange = (event: any, value: any) => {
     setPage(value);
-    handleSubmit();
   };
   const handleSubmit = () => {
     setLoading(true);
-    axios
-      .post(
-        "http://localhost:5000/api/search/jobs",
-        { jobcode: search, page: page },
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        setJobList(response.data.hits.hits);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
+    getjob({
+      variables: {
+        query: search,
+      },
+    });
   };
   useEffect(() => {
-    handleSubmit();
+    setLoading(true);
+    getJobs();
   }, []);
   return (
     <>
@@ -64,11 +80,13 @@ const JobsView = () => {
             />
           </Stack>
           <Stack>
-            {jobList.length > 0 ? (
+            {loading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : jobList.length > 0 ? (
               <Grid container>
-                {jobList.map((job: any) => (
+                {jobList.map((job: Job) => (
                   <Grid
-                    key={job.id}
+                    key={job.job_id}
                     xs={12}
                     sm={6}
                     md={3}
@@ -77,7 +95,7 @@ const JobsView = () => {
                     }}
                   >
                     <motion.div onClick={() => setSelected(job)}>
-                      <JobCard job={job._source} />
+                      <JobCard job={job} />
                     </motion.div>
                   </Grid>
                 ))}
@@ -89,7 +107,7 @@ const JobsView = () => {
         </Container>
       ) : (
         <Container>
-          <JobDetailsCard job={selected._source} setSelected={setSelected} />
+          <JobDetailsCard job={selected} setSelected={setSelected} />
         </Container>
       )}
     </>

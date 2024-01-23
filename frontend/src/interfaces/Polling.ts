@@ -3,30 +3,29 @@ export interface IOrganisation {
     name: string
     contactEmail: string
     url: string
-    status: 'allowed' | 'review' | 'denied'
+    status: 'Approved' | 'Review' | 'Denied'
 }
 
 export interface IUser {
     id: string
     name: string
     email: string
-    password: string
     role: 'User' | 'Admin' | 'Maintainer'
     organization: IOrganisation
 }
 
 export interface IResetPassword {
-    id: string
     password: string
+    repassword: string
 }
 
 export interface IActivate {
-    id: string
     password: string
+    repassword: string
 }
 
 export interface ILogin {
-    orgId: string
+    organization: string
     email: string,
     password: string,
 }
@@ -35,4 +34,19 @@ export interface IRegister {
     organizationName: string;
     organizationEmail: string;
     url?: string;
+}
+
+export interface IUserState {
+    type: UserAction;
+    payload: IUser;
+}
+
+export interface IForgotPassword {
+    organization: string;
+    email: string;
+}
+
+
+export enum UserAction {
+    SET_USER_DATA,
 }

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useMeLazyQuery } from "../generated/graphql";
+import { useGetUserDataLazyQuery } from "../generated/graphql";
 import { IUser, UserAction } from "../interfaces/Polling";
 import { useApp } from "../states/AppContext";
 
@@ -26,32 +26,34 @@ export const useUser = () => {
     dispatch({
       type: UserAction.SET_USER_DATA,
       payload: {
+        id: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
         organization: {
           id: user.organization.id,
           name: user.organization.name,
+          url: user.organization.url,
+          contactEmail: user.organization.contactEmail,
+          status: user.organization.status,
         },
-        id: user.id,
       },
     });
   };
-  const [me, { loading }] = useMeLazyQuery({
-    onCompleted(data) {
-      if (data.me && data.me.organization) {
-        setUser(data.me as IUser);
-      }
+  const [user, { data, loading, error }] = useGetUserDataLazyQuery({
+    onCompleted() {
+      setUser(data?.getUserData as IUser);
     },
-    onError() {
+    onError(error) {
       logout();
-      navigate("/login");
+      navigate("/user");
     },
   });
   const loginUser = (token?: string) => {
     if (token) {
       setToken(token);
     }
-    return me();
+    return user();
   };
 
   const logout = () => {
@@ -59,7 +61,7 @@ export const useUser = () => {
   };
 
   return {
-    user: state.UserReducer,
+    user: state,
     isAuthenticated: checkToken(),
     loginUser,
     loading,

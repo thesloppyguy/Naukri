@@ -11,13 +11,12 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import NavItem from "../atoms/NavItems";
 import Avatar from "@mui/material/Avatar";
-import { UserContext } from "../states/AppContext";
+import { useApp } from "../states/AppContext";
 
 const Nav = ({ openNav, onCloseNav }: any) => {
-  const userContext = useContext(UserContext);
+  const [state] = useApp();
   const pathname = usePathname();
   const upLg = useResponsive("up", "lg", "lg");
-
   useEffect(() => {
     if (openNav) {
       onCloseNav();
@@ -52,8 +51,8 @@ const Nav = ({ openNav, onCloseNav }: any) => {
         <Box sx={{ ml: 2 }}>
           <Stack direction="row" sx={{ alignItems: "center" }}>
             <Avatar src={"/assets/avatars/base_avatar.png"} alt="photoURL" />
-            <Typography variant="subtitle2" sx={{ px: 2 }}>
-              {userContext?.user?.email}
+            <Typography variant="subtitle2" sx={{ px: 2, overflow: "wrap" }}>
+              {state?.name}
             </Typography>
           </Stack>
         </Box>
@@ -64,7 +63,7 @@ const Nav = ({ openNav, onCloseNav }: any) => {
         ))}
       </Stack>
       <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-        {userContext?.user?.role === "Maintainer" ? (
+        {state?.role === "Maintainer" ? (
           <NavItem key={maintainerConfig.title} item={maintainerConfig} />
         ) : (
           <> </>

@@ -1,33 +1,57 @@
 import { useState } from "react";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
-import { useRouter } from "../hooks/useRouter";
-import { useParams } from "react-router-dom";
+import {
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { SubmitButton } from "../atoms/SubmitButton";
-
-interface FormData {
-  orgId: string;
-  email: string;
-}
+import { IForgotPassword } from "../interfaces/Polling";
+import { useForgotPasswordMutation } from "../generated/graphql";
+import { Notification } from "../molecules/Notification";
+import { INotification } from "../interfaces/General";
 
 export default function ForgotPasswordView() {
-  const theme = useTheme();
-  const router = useRouter();
-  const { token } = useParams();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<FormData>({
-    orgId: "",
+  const [notifcation, setNotification] = useState<INotification>({
+    message: "",
+    open: false,
+    type: "info",
+  });
+  const [formData, setFormData] = useState<IForgotPassword>({
+    organization: "",
     email: "",
+  });
+  const [forgetPassword] = useForgotPasswordMutation({
+    variables: {
+      input: {
+        name: formData.organization,
+        email: formData.email,
+      },
+    },
+    fetchPolicy: "no-cache",
+    async onCompleted() {
+      setNotification({
+        message: "Request Sent! Check your email ",
+        open: true,
+        type: "success",
+      });
+      setLoading(false);
+    },
+    onError(error) {
+      setNotification({
+        message: error?.message as string,
+        open: true,
+        type: "error",
+      });
+      setLoading(false);
+    },
   });
 
   const handleForgotPassword = async () => {
-    console.log({ ...formData, token });
     setLoading(true);
-    setLoading(false);
+    forgetPassword();
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +65,16 @@ export default function ForgotPasswordView() {
   const renderForm = (
     <>
       <Stack spacing={3}>
-        <TextField name="orgId" label="Organization" />
-        <TextField name="email" label="Email address" />
+        <TextField
+          name="organization"
+          label="Organization"
+          onChange={handleInputChange}
+        />
+        <TextField
+          name="email"
+          label="Email address"
+          onChange={handleInputChange}
+        />
       </Stack>
 
       <Stack
@@ -60,13 +92,18 @@ export default function ForgotPasswordView() {
         color="inherit"
         onClick={handleForgotPassword}
       >
-        Send Request
+        {loading ? (
+          <CircularProgress size={24} color="inherit" />
+        ) : (
+          "Send Request"
+        )}
       </SubmitButton>
     </>
   );
 
   return (
     <>
+      <Notification {...notifcation} setOpen={setNotification} />
       <Typography variant="h4" textAlign={"center"}>
         Forgot Password
       </Typography>

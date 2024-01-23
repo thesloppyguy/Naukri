@@ -16,9 +16,9 @@ type Organization {
 }
 
 type UserData {
-  name: String!
+  _id: ID
+  name: String
   email: String
-  password: String
   role: Role
   organization: Organization
 }
@@ -32,7 +32,7 @@ type UserWithToken {
   name: String
   email: String
   role: Role
-  organization: String
+  organization: Organization
   userJwtToken: JwtToken
 }
 
@@ -76,7 +76,6 @@ input ResetPasswordInput {
 }
 
 input InviteUserInput {
-  organization: ID!
   name: String!
   email: String!
   role: Role!
@@ -103,41 +102,91 @@ input UpdateRoleInput {
   role: Role
 }
 
-type BoolAuth {
-  response: Boolean
-  error: Error
-}
-
-type UserAuth {
-  response: UserWithToken
-  error: Error
-}
-
 type Count {
   resume: Int
   job: Int
 }
 
+type Job {
+  job_id: String
+  job_code_title: String
+  description: String
+}
+
+type Work {
+  company: String
+  designation: String
+  date_of_joining: String
+  date_of_leaving: String
+}
+
+type Education {
+  degree_name: String
+  degree_type: String
+  institute_name: String
+}
+
+type Candidate {
+  first_name: String
+  last_name: String
+  email: String
+  phone: String
+  date_of_birth: String
+  candidate_age: String
+  current_address: String
+  permanent_address: String
+  country: String
+  total_work_experience: Int
+  work_experience: [Work]
+  education: [Education]
+  employer_id: String
+  file_name: String
+  fresher: String
+  gender: String
+  job_code_title: String
+  job_id: String
+  languages: String
+}
+
+input CandidateQuery {
+  keywords: [String]
+  must: Boolean
+  notKeywords: [String]
+  gender: String
+  location: String
+  expMax: String
+  expMin: String
+  department: String
+  industry: String
+  currentCompany: String
+  currentDesignation: String
+  ugCourse: String
+  pgCourse: String
+  pdCourse: String
+  jobcode: String
+  global: Boolean
+}
+
 type Query {
   getUserData: UserData
-
+  getJob(query: String): [Job]
+  getJobs: [Job]
   getCount: Count
+  getCandidate(query: CandidateQuery, page: Int): [Candidate]
   getOrganizations: [Organization]
-  getUserByOrganization(organizationId: ID!): [User]
+  getUserByOrganization: [User]
 }
 
 type Mutation {
-  registerOrganization(input: RegisterInput!): BoolAuth
-  inviteOrganization(input: InviteOrganizationInput!): BoolAuth
-  deleteOrganization(id: ID!): BoolAuth
-  updateOrganizationStatus(input: UpdateStatusInput!): BoolAuth
-
-  inviteUser(input: InviteUserInput!): BoolAuth
-  forgotPassword(input: ForgotPasswordInput!): BoolAuth
-  resetPasswordUser(input: ResetPasswordInput!): BoolAuth
-  activateUser(input: ActivateInput!): BoolAuth
-  deleteUser(id: ID!): BoolAuth
-  updateUserRole(input: UpdateRoleInput!): BoolAuth
-
-  loginUser(input: LoginInput!): UserAuth
+  registerOrganization(input: RegisterInput!): Boolean
+  inviteOrganization(input: InviteOrganizationInput!): Boolean
+  deleteOrganization(id: ID!): Boolean
+  updateOrganizationStatus(input: UpdateStatusInput!): Boolean
+  inviteUser(input: InviteUserInput!): Boolean
+  forgotPassword(input: ForgotPasswordInput!): Boolean
+  resetPasswordUser(input: ResetPasswordInput!): Boolean
+  activateUser(input: ActivateInput!): Boolean
+  deleteUser(id: ID!): Boolean
+  updateUserRole(input: UpdateRoleInput!): Boolean
+  loginUser(input: LoginInput!): UserWithToken
 }

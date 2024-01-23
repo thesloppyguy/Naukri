@@ -9,4 +9,5 @@ export default cleanEnv(process.env, {
   OPENSEARCH_PROTOCOL: str(),
   OPENSEARCH_PORT: str(),
   OPENSEARCH_AUTH: str(),
+  TOKEN_EXPIRY_TIME: str(),
 })

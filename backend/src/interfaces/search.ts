@@ -15,10 +15,8 @@ export interface SearchBody {
     pgCourse: string,
     pdCourse: string,
     jobcode: string
-    page: number
     global: boolean
 }
 export interface NlpBody {
     query: string
-    page: number
 }

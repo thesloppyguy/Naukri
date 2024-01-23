@@ -1,47 +1,68 @@
-import { useContext, useState } from "react";
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import InputAdornment from "@mui/material/InputAdornment";
+import { useState } from "react";
 import { useRouter } from "../hooks/useRouter";
-import Iconify from "../molecules/Iconify";
 import { ILogin } from "../interfaces/Polling";
 import { SubmitButton } from "../atoms/SubmitButton";
-import axios from "axios";
-import Divider from "@mui/material/Divider";
-import { UserContext } from "../states/AppContext";
+import { useLoginUserMutation } from "../generated/graphql";
+import { useUser } from "../util/auth";
+import Iconify from "../molecules/Iconify";
+import { Notification } from "../molecules/Notification";
+import {
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  IconButton,
+  Divider,
+  InputAdornment,
+  CircularProgress,
+} from "@mui/material/";
+import { INotification } from "../interfaces/General";
 
 export default function LoginView() {
-  const userContext = useContext(UserContext);
+  const { loginUser } = useUser();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [notifcation, setNotification] = useState<INotification>({
+    message: "",
+    open: false,
+    type: "info",
+  });
   const [formData, setFormData] = useState<ILogin>({
-    orgId: "",
+    organization: "",
     email: "",
     password: "",
   });
-
+  const [login] = useLoginUserMutation({
+    variables: {
+      input: {
+        organization: formData.organization,
+        email: formData.email,
+        password: formData.password,
+      },
+    },
+    fetchPolicy: "no-cache",
+    async onCompleted(data) {
+      if (data.loginUser && data.loginUser.userJwtToken?.token) {
+        await loginUser(data.loginUser.userJwtToken?.token);
+        router.push("/dashboard");
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
+    },
+    onError(error) {
+      setNotification({
+        message: error?.message as string,
+        open: true,
+        type: "error",
+      });
+      setLoading(false);
+    },
+  });
   const handleLogin = async () => {
     setLoading(true);
-
-    axios
-      .post("http://localhost:5000/api/login/", formData, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        setError("");
-        router.push("/dashboard");
-        userContext?.setUser(response.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setError(error.response.data.error);
-      });
-    setLoading(false);
+    login();
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,9 +78,9 @@ export default function LoginView() {
       <Stack spacing={3}>
         <TextField
           required
-          name="orgId"
+          name="organization"
           label="Organization"
-          value={formData.orgId}
+          value={formData.organization}
           onChange={handleInputChange}
         />
         <TextField
@@ -103,7 +124,9 @@ export default function LoginView() {
         <Link
           variant="subtitle2"
           underline="hover"
-          href="/user/forgot-password"
+          onClick={() => {
+            router.push("/user/forgot-password");
+          }}
         >
           Forgot password?
         </Link>
@@ -116,14 +139,16 @@ export default function LoginView() {
         variant="contained"
         color="inherit"
         onClick={handleLogin}
+        disabled={loading}
       >
-        Login
+        {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
       </SubmitButton>
     </>
   );
 
   return (
     <>
+      <Notification {...notifcation} setOpen={setNotification} />
       <Typography variant="h4" textAlign={"center"}>
         Login to Lokibots
       </Typography>
@@ -133,13 +158,7 @@ export default function LoginView() {
           Get started.
         </Link>
       </Typography>
-      {error ? (
-        <Divider sx={{ color: "red", py: "2px" }} textAlign={"center"}>
-          {error}
-        </Divider>
-      ) : (
-        <Divider></Divider>
-      )}
+      <Divider></Divider>
       {renderForm}
     </>
   );

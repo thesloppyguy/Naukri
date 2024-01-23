@@ -1,18 +1,18 @@
-import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useScrollTop } from "../hooks/useScrollTop";
 import { useEffect } from "react";
-import IsAuth from "../util/IsAuth";
 import { AppProvider } from "../states/AppContext";
+import { checkToken } from "../util/auth";
 
 const WrappedPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { id } = useParams();
   const redirect = (path: string) => {
     navigate(path);
   };
   const handleRoute = async () => {
-    const isAuthenticated = await IsAuth();
+    const isAuthenticated = checkToken();
+
     if (isAuthenticated) {
       if (!location.pathname.includes("dashboard")) {
         redirect("/dashboard");

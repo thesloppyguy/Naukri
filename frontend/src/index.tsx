@@ -1,19 +1,19 @@
 import { alpha, createTheme, ThemeProvider } from "@mui/material";
+import { setContext } from "@apollo/client/link/context";
 import { HelmetProvider } from "react-helmet-async";
 import { RouterProvider } from "react-router-dom";
-import reportWebVitals from "./reportWebVitals";
+import { grey } from "@mui/material/colors";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
+import { getToken } from "./util/auth";
+import { AppProvider } from "./states/AppContext";
 import React, { Suspense } from "react";
+import reportWebVitals from "./reportWebVitals";
 import ReactDOM from "react-dom/client";
 import Router from "./router";
 import "./index.css";
-import { grey } from "@mui/material/colors";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
 
+const httpLink = createUploadLink({ uri: process.env.REACT_APP_API_URL });
 const theme = createTheme({
   palette: {
     primary: {
@@ -82,27 +82,37 @@ const theme = createTheme({
   },
 });
 
+const authLink = setContext((_, { headers = {} }) => {
+  const token = getToken();
+  return {
+    headers: {
+      ...headers,
+      authorization: token ? `${token}` : "",
+    },
+  };
+});
+
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 const client = new ApolloClient({
-  uri: process.env.BASE_URL
-    ? process.env.BASE_URL
-    : "http://localhost:3000/graphql",
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 
 root.render(
   <HelmetProvider>
     <Suspense>
-      <ApolloProvider client={client}>
-        <ThemeProvider theme={theme}>
-          <React.StrictMode>
-            <RouterProvider router={Router} />
-          </React.StrictMode>
-        </ThemeProvider>
-      </ApolloProvider>
+      <AppProvider>
+        <ApolloProvider client={client}>
+          <ThemeProvider theme={theme}>
+            <React.StrictMode>
+              <RouterProvider router={Router} />
+            </React.StrictMode>
+          </ThemeProvider>
+        </ApolloProvider>
+      </AppProvider>
     </Suspense>
   </HelmetProvider>
 );

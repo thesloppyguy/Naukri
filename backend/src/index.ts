@@ -9,10 +9,9 @@ import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloServerPluginDrainHttpServer } from '@apollo/server/plugin/drainHttpServer';
 import resolvers from './resolver'
 import cors from 'cors'
-import session from 'express-session'
-import MongoStore from 'connect-mongo'
 import http from 'http'
 import { MyContext } from './interfaces/server'
+import context from './context'
 import mongoose from 'mongoose'
 
 
@@ -36,25 +35,12 @@ mongoose
       credentials: true
     }))
 
-    app.use(session({
-      secret: env.SESSION_SECRET,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        maxAge: 24 * 60 * 60 * 1000
-      },
-      rolling: true,
-      store: MongoStore.create({
-        mongoUrl: env.MONGO_CONNECTION_STRING
-      })
-    }))
-
     server.start().then(() => {
       app.use("/graphql",
         cors<cors.CorsRequest>(),
         bodyParser.json({ limit: '50mb' }),
         expressMiddleware(server, {
-          context: async ({ req }) => ({ token: req.headers.token }),
+          context: context,
         }),
       );
 

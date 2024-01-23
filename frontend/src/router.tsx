@@ -12,6 +12,7 @@ import OverviewPage from "./pages/DashboardPage/OverviewPage";
 import PreLoginPage from "./pages/PreLoginPage";
 import SettingsPage from "./pages/DashboardPage/SettingsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import Page404 from "./pages/Page404";
 import App from "./pages";
 
 const Router = createBrowserRouter([
@@ -30,6 +31,10 @@ const Router = createBrowserRouter([
           {
             path: "register",
             element: <RegisterPage />,
+          },
+          {
+            path: "forgot-password",
+            element: <ForgotPasswordPage />,
           },
           {
             path: "activate/:token",
@@ -74,6 +79,10 @@ const Router = createBrowserRouter([
             element: <SettingsPage />,
           },
         ],
+      },
+      {
+        path: "*",
+        element: <Page404 />,
       },
     ],
   },

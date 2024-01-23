@@ -44,7 +44,10 @@ const JobCard = ({ job }: any) => {
           justifyContent: "center",
         }}
       >
-        <Typography variant="subtitle1" sx={{ color: "#000000" }}>
+        <Typography
+          variant="subtitle1"
+          sx={{ color: "#000000", fontSize: "12px" }}
+        >
           {" "}
           {job.job_code_title}
         </Typography>

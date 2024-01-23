@@ -1,12 +1,12 @@
 import jwt from 'jsonwebtoken';
-import throwCustomError, {
-  ErrorTypes,
-} from '../helpers/error-handler.helper.js';
+import env from '../utils/validateEnv'
+import { Request, Response } from 'express';
+import { GraphQLError } from 'graphql';
 
-const getUser = async (token) => {
+const getUser = async (token: string) => {
   try {
     if (token) {
-      const user = jwt.verify(token, process.env.JWT_PRIVATE_KEY);
+      const user = jwt.verify(token, env.SESSION_SECRET);
       return user;
     }
     return null;
@@ -15,7 +15,8 @@ const getUser = async (token) => {
   }
 };
 
-const context = async ({ req, res }) => {
+const context = async ({ req }: { req: Request, res: Response }) => {
+
   //   console.log(req.body.operationName);
   if (req.body.operationName === 'IntrospectionQuery') {
     // console.log('blocking introspection query..');
@@ -23,11 +24,12 @@ const context = async ({ req, res }) => {
   }
   // allowing the 'CreateUser' and 'Login' queries to pass without giving the token
   if (
-    req.body.operationName === 'Register' ||
-    req.body.operationName === 'Login' ||
-    req.body.operationName === 'Activate' ||
-    req.body.operationName === 'ForgotPassword' ||
-    req.body.operationName === 'ResetPassword'
+    req.body.operationName === 'registerOrganization' ||
+    req.body.operationName === 'loginUser' ||
+    req.body.operationName === 'activateUser' ||
+    req.body.operationName === 'forgotPassword' ||
+    req.body.operationName === 'resetPasswordUser' ||
+    req.body.operationName === 'loginUser'
   ) {
     return {};
   }
@@ -37,9 +39,8 @@ const context = async ({ req, res }) => {
 
   // try to retrieve a user with the token
   const user = await getUser(token);
-
-  if (!user) {
-    throwCustomError('User is not Authenticated', ErrorTypes.UNAUTHENTICATED);
+  if (user == null) {
+    throw new GraphQLError('User Unauthorized', { extensions: { code: 'CUSTOM_CODE_401' }, });
   }
 
   // add the user to the context

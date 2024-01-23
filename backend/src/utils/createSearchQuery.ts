@@ -2,9 +2,9 @@ import { SearchBody, NlpBody } from "../interfaces/search"
 import department from "../const/department"
 import industry from "../const/industry"
 import ug from "../const/ug"
-import createHttpError from "http-errors"
-import clinet from '../os-client'
+import clinet from '../clients/OpenSearch'
 import stopwords from "../const/stopwords"
+import { GraphQLError } from "graphql"
 
 const getDescription = async (code: string) => {
   const response = await clinet.search({
@@ -32,7 +32,7 @@ const cleanText = (text: string) => {
   return removedWordList;
 }
 
-const createGeneralQuery = async (params: SearchBody) => {
+const createGeneralQuery = async (params: SearchBody, page: number) => {
   const must = []
   const should = []
   const mustNot = []
@@ -97,19 +97,21 @@ const createGeneralQuery = async (params: SearchBody) => {
       })
     }
   }
-  // if (params.pgCourse !== "any") {
-  //   must.push({
-  //     "nested": {
-  //       "path": "education", "query": {
-  //         "more_like_this": {
-  //           "fields": ["education.degree_name"],
-  //           "like": params.pgCourse, "min_term_freq": 1,
-  //           "min_doc_freq": 1
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
+  if (params.pgCourse !== "any") {
+    if (params.ugCourse !== "no") {
+      must.push({
+        "nested": {
+          "path": "education", "query": {
+            "more_like_this": {
+              "fields": ["education.degree_name"],
+              "like": params.pgCourse, "min_term_freq": 1,
+              "min_doc_freq": 1
+            }
+          }
+        }
+      })
+    }
+  }
   // if (params.pdCourse !== "any") {
   //   must.push({
   //     "nested": {
@@ -137,7 +139,7 @@ const createGeneralQuery = async (params: SearchBody) => {
   if (params.jobcode !== "") {
     const description = await getDescription(params.jobcode)
     if (description === "") {
-      throw createHttpError(400, 'Jobcode not found')
+      throw new GraphQLError('Jobcode not found', { extensions: { code: 'CUSTOM_CODE_400' } })
     }
     else {
       const words = cleanText(description);
@@ -149,6 +151,7 @@ const createGeneralQuery = async (params: SearchBody) => {
       }
     }
   }
+
   return {
     "_source": {
       "exclude": ["passage_embedding"]
@@ -160,8 +163,8 @@ const createGeneralQuery = async (params: SearchBody) => {
         "must_not": mustNot
       }
     },
-    "size": 16,
-    "from": (params.page - 1) * 16,
+    "size": 8,
+    "from": (page - 1) * 8
   }
 }
 const createNLPQuery = (params: NlpBody) => {
@@ -173,8 +176,7 @@ const createNLPQuery = (params: NlpBody) => {
     "query": {
       "match_all": {}
     },
-    "size": 16,
-    "from": (params.page - 1) * 16,
+    "size": 160,
   }
 }
 

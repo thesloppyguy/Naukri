@@ -84,9 +84,9 @@ const CandidateSearch = ({ formData, setFormData }: any) => {
             onChange={handleMustChange}
             color="primary"
             sx={{
-              inputProps: { "aria-label": "Must include all keywords" },
+              inputProps: { ariaLabel: "Must include all keywords" },
             }}
-            defaultChecked={formData.must}
+            checked={formData.must}
           />
           <Typography>Must have all keywords</Typography>
         </Grid>

@@ -1,11 +1,11 @@
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { UserContext } from "../states/AppContext";
+import { useApp } from "../states/AppContext";
 import { useContext } from "react";
 
 const UserWindow = () => {
-  const userContext = useContext(UserContext);
+  const [state] = useApp();
 
   return (
     <Paper
@@ -23,24 +23,22 @@ const UserWindow = () => {
       <Grid container spacing={2}>
         <Grid item xs={12}>
           <Typography variant="subtitle1">
-            <strong>Email:</strong> {userContext?.user?.email}
+            <strong>Name:</strong> {state?.name}
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1">
-            <strong>Role:</strong> {userContext?.user?.role}
+            <strong>Email:</strong> {state?.email}
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1">
-            <strong>Organization:</strong>{" "}
-            {userContext?.user?.organization.name}
+            <strong>Role:</strong> {state?.role}
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="subtitle1">
-            <strong>Admin Email:</strong>{" "}
-            {userContext?.user?.organization.contactEmail}
+            <strong>Organization:</strong> {state?.organization.name}
           </Typography>
         </Grid>
       </Grid>

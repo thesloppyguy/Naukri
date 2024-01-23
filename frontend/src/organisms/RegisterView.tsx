@@ -1,41 +1,60 @@
 import { useState } from "react";
-
-import Link from "@mui/material/Link";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material/styles";
-
-import { useRouter } from "../hooks/useRouter";
+import {
+  Link,
+  Stack,
+  TextField,
+  Typography,
+  CircularProgress,
+} from "@mui/material";
 import { SubmitButton } from "../atoms/SubmitButton";
 import { IRegister } from "../interfaces/Polling";
-import axios from "axios";
 import Divider from "@mui/material/Divider";
+import { useRegisterOrganizationMutation } from "../generated/graphql";
+import { INotification } from "../interfaces/General";
+import { Notification } from "../molecules/Notification";
 
 export default function RegisterView() {
-  const theme = useTheme();
-  const router = useRouter();
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [notifcation, setNotification] = useState<INotification>({
+    message: "",
+    open: false,
+    type: "info",
+  });
   const [formData, setFormData] = useState<IRegister>({
     organizationName: "",
     organizationEmail: "",
     url: "",
   });
-
-  const handleRegister = async () => {
-    console.log(formData);
-    setLoading(true);
-    axios
-      .post("http://localhost:5000/api/register", formData)
-      .then((response) => {
-        router.push("/user");
-        setLoading(false);
-      })
-      .catch((error) => {
-        if (!error.response.data.error.includes("unknown"))
-          setError(error.response.data.error);
+  const [register] = useRegisterOrganizationMutation({
+    variables: {
+      input: {
+        name: formData.organizationName,
+        email: formData.organizationEmail,
+        url: formData.url,
+      },
+    },
+    fetchPolicy: "no-cache",
+    async onCompleted() {
+      setNotification({
+        message:
+          "Successfully Registered! Please wait while we review your website.",
+        open: true,
+        type: "success",
       });
+      setLoading(false);
+    },
+    onError(error) {
+      setNotification({
+        message: error?.message as string,
+        open: true,
+        type: "error",
+      });
+      setLoading(false);
+    },
+  });
+  const handleRegister = async () => {
+    setLoading(true);
+    register();
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +66,7 @@ export default function RegisterView() {
   };
 
   const renderForm = (
-    <form onSubmit={handleRegister}>
+    <>
       <Stack spacing={3}>
         <TextField
           name="organizationName"
@@ -86,13 +105,14 @@ export default function RegisterView() {
         color="inherit"
         onClick={handleRegister}
       >
-        Register
+        {loading ? <CircularProgress size={24} color="inherit" /> : "Register"}
       </SubmitButton>
-    </form>
+    </>
   );
 
   return (
     <>
+      <Notification {...notifcation} setOpen={setNotification} />
       <Typography variant="h4" textAlign={"center"}>
         Register to Lokibots
       </Typography>
@@ -103,13 +123,7 @@ export default function RegisterView() {
           Login
         </Link>
       </Typography>
-      {error ? (
-        <Divider sx={{ color: "red", py: "2px" }} textAlign={"center"}>
-          {error}
-        </Divider>
-      ) : (
-        <Divider></Divider>
-      )}
+      <Divider></Divider>
       {renderForm}
     </>
   );

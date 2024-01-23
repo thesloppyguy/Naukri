@@ -1,69 +1,140 @@
 mutation registerOrganization($input: RegisterInput!) {
-  registerOrganization(input: $input) {
-    response
-  }
+  registerOrganization(input: $input)
 }
 
 mutation inviteOrganization($input: InviteOrganizationInput!) {
-  inviteOrganization(input: $input) {
-    response
-  }
+  inviteOrganization(input: $input)
 }
 
 mutation deleteOrganization($id: ID!) {
-  deleteOrganization(id: $id) {
-    response
-  }
+  deleteOrganization(id: $id)
 }
 
 mutation updateOrganizationStatus($input: UpdateStatusInput!) {
-  updateOrganizationStatus(input: $input) {
-    response
-  }
+  updateOrganizationStatus(input: $input)
 }
 
 mutation inviteUser($input: InviteUserInput!) {
-  inviteUser(input: $input) {
-    response
-  }
+  inviteUser(input: $input)
 }
 
 mutation forgotPassword($input: ForgotPasswordInput!) {
-  forgotPassword(input: $input) {
-    response
-  }
+  forgotPassword(input: $input)
 }
 
 mutation resetPasswordUser($input: ResetPasswordInput!) {
-  resetPasswordUser(input: $input) {
-    response
-  }
+  resetPasswordUser(input: $input)
 }
 
 mutation activateUser($input: ActivateInput!) {
-  activateUser(input: $input) {
-    response
-  }
+  activateUser(input: $input)
 }
 
 mutation deleteUser($id: ID!) {
-  deleteUser(id: $id) {
-    response
-  }
+  deleteUser(id: $id)
 }
 
 mutation updateUserRole($input: UpdateRoleInput!) {
-  updateUserRole(input: $input) {
-    response
-  }
+  updateUserRole(input: $input)
 }
 
 mutation loginUser($input: LoginInput!) {
   loginUser(input: $input) {
-    response {
-      userJwtToken {
-        token
-      }
+    userJwtToken {
+      token
     }
+  }
+}
+
+query getUserData {
+  getUserData {
+    _id
+    name
+    email
+    role
+    organization {
+      _id
+      name
+      email
+      url
+      status
+    }
+  }
+}
+
+query getCount {
+  getCount {
+    resume
+    job
+  }
+}
+
+query getJobs {
+  getJobs {
+    description
+    job_id
+    job_code_title
+  }
+}
+
+query getJob($query: String) {
+  getJob(query: $query) {
+    description
+    job_id
+    job_code_title
+  }
+}
+
+query getUserByOrganization {
+  getUserByOrganization {
+    _id
+    name
+    email
+    password
+    role
+    organization
+  }
+}
+
+query getOrganizations {
+  getOrganizations {
+    _id
+    name
+    email
+    url
+    status
+  }
+}
+
+query getCandidate($query: CandidateQuery, $page: Int) {
+  getCandidate(query: $query, page: $page) {
+    first_name
+    last_name
+    email
+    phone
+    date_of_birth
+    candidate_age
+    current_address
+    permanent_address
+    country
+    total_work_experience
+    work_experience {
+      company
+      designation
+      date_of_joining
+      date_of_leaving
+    }
+    education {
+      degree_name
+      degree_type
+      institute_name
+    }
+    employer_id
+    file_name
+    fresher
+    gender
+    job_code_title
+    job_id
+    languages
   }
 }
