@@ -1,15 +1,26 @@
 version: "3.7"
 
 services:
+  mongo:
+    image: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - data-volume:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app-network
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    image: myapp-backend
-    container_name: myapp-node-backend
-    command: /usr/src/app/node_modules/.bin/nodemon server.js
+    image: naukri-backend
+    container_name: naukri-backend
+    command: yarn start
     volumes:
-      - ./backend/:/usr/src/app
+      - ./backend/:/backend
       - /usr/src/app/node_modules
     ports:
       - "5000:5000"
@@ -20,26 +31,21 @@ services:
       - NODE_ENV=development
     networks:
       - app-network
-  mongo:
-    image: mongo
-    volumes:
-      - data-volume:/data/db
-    ports:
-      - "27017:27017"
-    networks:
-      - app-network
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: myapp-frontend
-    container_name: myapp-react-frontend
-    command: npm start
-    volumes:
-      - ./frontend/:/usr/app
-      - /usr/app/node_modules
+    image: naukri-frontend
+    container_name: naukri-frontend
+    command: yarn start
+    env_file: ./frontend/.env
+    environment:
+      - NODE_ENV=development
+      # volumes:
+      - ./frontend/:/frontend
+    #   - /usr/app/node_modules
     depends_on:
-      - server
+      - backend
     ports:
       - "3000:3000"
     networks:

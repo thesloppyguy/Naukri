@@ -66,14 +66,12 @@ const resolvers: Resolvers = {
     },
     getCandidate: async (_, { query, page }) => {
       const opensearchQuery = await createGeneralQuery(query as SearchBody, page as number)
-      console.log(JSON.stringify(opensearchQuery))
       const response = await oClient.search({
         index: 'resumes',
         body: opensearchQuery
       })
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const candidateList = response.body.hits.hits.map((candidates: any) => candidates._source)
-      console.log("candidateList")
       return candidateList
     },
     getOrganizations: async () => {

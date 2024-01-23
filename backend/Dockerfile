@@ -1,14 +1,13 @@
-FROM node:10.16-alpine
+FROM node:20.11
 
-WORKDIR /usr/src/app
+ENV NODE_ENV development
 
-COPY package*.json ./
-
-RUN npm install -g yarn --silent
-RUN yarn install
+WORKDIR /backend
 
 COPY . .
 
+RUN yarn install
+
 EXPOSE 5000
 
-CMD ["yarn","start"]
+CMD [ "yarn", "start" ]
