@@ -8,6 +8,7 @@ import env from '../utils/validateEnv'
 import oClient from "../clients/OpenSearch"
 import { createGeneralQuery } from '../utils/createSearchQuery'
 import { SearchBody } from "../interfaces/search"
+import { sendInvite } from "../utils/sendInvite"
 
 
 // const testData=[
@@ -133,7 +134,6 @@ const resolvers: Resolvers = {
         url,
         status: 'Review'
       })
-      // await sendInvite()
       return true
     },
     inviteOrganization: async (_, { input }) => {
@@ -153,6 +153,7 @@ const resolvers: Resolvers = {
         url,
         status: 'Review'
       })
+
       // await sendInvite()
       return true
 
@@ -201,13 +202,13 @@ const resolvers: Resolvers = {
       if (user) {
         throw new GraphQLError("User already exists", { extensions: { code: 'CUSTOM_CODE_400' }, });
       }
-      await UserModel.create({
+      const newUser= await UserModel.create({
         name,
         email,
         role,
         organization: organization
       })
-      console.log("Send Invite")
+      sendInvite(newUser._id.toString(), email, 'activate')
       return true
     },
     resetPasswordUser: async (_, { input }) => {
