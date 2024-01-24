@@ -5,7 +5,6 @@ import {
   Stack,
   Box,
   Paper,
-  useTheme,
   CircularProgress,
   Typography,
 } from "@mui/material";
@@ -16,8 +15,6 @@ import NlpSearch from "../../molecules/NlpSearch";
 import { SubmitButton } from "../../atoms/SubmitButton";
 import { ISearch, INLP } from "../../interfaces/Query";
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import axios from "axios";
 import { Candidate, useGetCandidateLazyQuery } from "../../generated/graphql";
 
 const searchBody = {
@@ -49,13 +46,16 @@ const SearchView = () => {
   const [page, setPage] = useState(1);
   const [formData, setFormData] = useState<ISearch>(searchBody);
   const [nlpData, setNlpData] = useState<INLP>(nlpBody);
-  const [candidateList, setCandidateList] = useState<Candidate[]>([]);
+  const [candidateList, setCandidateList] = useState<any>([]);
   const [loading, setLoading] = useState(false);
   const [getCandidate, { data, error }] = useGetCandidateLazyQuery({
     fetchPolicy: "no-cache",
     onCompleted() {
-      setCandidateList(data?.getCandidate as Candidate[]);
-      console.log(candidateList);
+      const canList = data?.getCandidate?.map((candidate) =>
+        JSON.parse(candidate?.value as string)
+      );
+      console.log(canList);
+      setCandidateList(canList);
       setLoading(false);
     },
     onError(error) {
@@ -65,7 +65,9 @@ const SearchView = () => {
 
   const handleSubmit = () => {
     setLoading(true);
+    setPage(1);
     if (check) {
+      setCandidateList([]);
       getCandidate({
         variables: {
           query: formData,
@@ -86,9 +88,16 @@ const SearchView = () => {
   const handleSwitch = () => {
     setCheck(!check);
   };
+
   useEffect(() => {
-    console.log();
-    handleSubmit();
+    if (check) {
+      getCandidate({
+        variables: {
+          query: formData,
+          page: page,
+        },
+      });
+    }
   }, [page]);
 
   return (
@@ -135,17 +144,23 @@ const SearchView = () => {
               <Switch checked={check} onChange={handleSwitch} />
               FILTER
             </Stack> */}
-            <Stack direction="row">
-              <Pagination
-                count={10}
-                size="small"
-                defaultValue={page}
-                onChange={handlePageChange}
-              />
-            </Stack>
+            {loading ? (
+              <></>
+            ) : (
+              <Stack direction="row">
+                <Pagination
+                  count={10}
+                  size="small"
+                  page={page}
+                  onChange={handlePageChange}
+                />
+              </Stack>
+            )}
           </Stack>
           <Stack>
-            {candidateList.length > 0 ? (
+            {loading ? (
+              <></>
+            ) : candidateList.length > 0 ? (
               <Grid container>
                 {candidateList.map((candidate: any) => (
                   <Grid
@@ -157,9 +172,9 @@ const SearchView = () => {
                       padding: "10px",
                     }}
                   >
-                    <motion.div onClick={() => setSelected(candidate)}>
+                    <div onClick={() => setSelected(candidate)}>
                       <CandidateCard candidate={candidate} />
-                    </motion.div>
+                    </div>
                   </Grid>
                 ))}
               </Grid>
@@ -172,7 +187,7 @@ const SearchView = () => {
         </Container>
       ) : (
         <Container sx={{ height: "100vh" }}>
-          <AnimatePresence>
+          <div>
             {selected && (
               <Paper>
                 <CandidateDetailsCard
@@ -181,7 +196,7 @@ const SearchView = () => {
                 />
               </Paper>
             )}
-          </AnimatePresence>
+          </div>
         </Container>
       )}
     </>

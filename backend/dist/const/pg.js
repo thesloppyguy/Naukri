@@ -1,4 +1,6 @@
-const pg: { [key: string]: string[] } = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const pg = {
     "Master of Business Administration": [
         "mba",
         "MBA",
@@ -201,7 +203,7 @@ const pg: { [key: string]: string[] } = {
         "quality assurance",
         "Quality Assurance"
     ],
-    "Master of Education": ["med", "MEd", "education", "Education", "ed", "Ed","ED"],
+    "Master of Education": ["med", "MEd", "education", "Education", "ed", "Ed", "ED"],
     "Master of Education Educational Technology": [
         "edtech",
         "EdTech",
@@ -308,5 +310,5 @@ const pg: { [key: string]: string[] } = {
         "behavioral",
         "Behavioral"
     ]
-}
-export default pg;
+};
+exports.default = pg;

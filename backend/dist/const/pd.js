@@ -1,4 +1,6 @@
-const pg: { [key: string]: string[] } = {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const pd = {
     "Master of Business Administration": [
         "mba",
         "MBA",
@@ -24,14 +26,12 @@ const pg: { [key: string]: string[] } = {
     "Master of Business Administration Operations Management": [
         "operations",
         "Operations",
-        "ops",
-        "Ops"
+        "operations management",
+        "Operations Management"
     ],
     "Master of Business Administration Information Technology": [
         "mba it",
-        "MBA IT",
-        "information technology",
-        "Information Technology",
+        "MBA IT"
     ],
     "Master of Technology": ["mtech", "MTech", "technology", "Technology"],
     "Master of Technology Computer Science and Engineering": [
@@ -155,158 +155,189 @@ const pg: { [key: string]: string[] } = {
         "Hardware Technology"
     ],
     "Master of Computer Applications Management Information Systems": [
-        "mis",
-        "MIS",
-        "information",
-        "Information"
+        "mca mis",
+        "MCA MIS",
+        "management information systems",
+        "Management Information Systems"
     ],
     "Master of Computer Applications Internet": [
+        "mca internet",
+        "MCA Internet",
         "internet",
         "Internet"
     ],
     "Master of Computer Applications Software Development": [
+        "mca software development",
+        "MCA Software Development",
         "software development",
         "Software Development"
     ],
     "Master of Computer Applications Systems Management": [
+        "mca systems management",
+        "MCA Systems Management",
         "systems management",
         "Systems Management"
     ],
     "Master of Pharmacy": ["mpharm", "MPharm", "pharmacy", "Pharmacy"],
     "Master of Pharmacy Pharmaceutics": [
+        "mpharm pharmaceutics",
+        "MPharm Pharmaceutics",
         "pharmaceutics",
         "Pharmaceutics"
     ],
     "Master of Pharmacy Pharmacology": [
+        "mpharm pharmacology",
+        "MPharm Pharmacology",
         "pharmacology",
         "Pharmacology"
     ],
     "Master of Pharmacy Pharmaceutical Chemistry": [
         "mpharm chem",
         "MPharm Chem",
-        "pharma chem",
-        "pharma Chem",
         "pharmaceutical chemistry",
         "Pharmaceutical Chemistry"
     ],
     "Master of Pharmacy Pharmacognosy": [
+        "mpharm pharmacognosy",
+        "MPharm Pharmacognosy",
         "pharmacognosy",
         "Pharmacognosy"
     ],
     "Master of Pharmacy Quality Assurance": [
-        "qa",
-        "QA",
-        "assurance",
-        "Assurance",
+        "mpharm qa",
+        "MPharm QA",
         "quality assurance",
         "Quality Assurance"
     ],
-    "Master of Education": ["med", "MEd", "education", "Education", "ed", "Ed","ED"],
+    "Master of Education": ["med", "MEd", "education", "Education"],
     "Master of Education Educational Technology": [
-        "edtech",
-        "EdTech",
-        "ED",
-        "Ed",
+        "med edtech",
+        "MEd EdTech",
         "educational technology",
         "Educational Technology"
     ],
     "Master of Education Educational Management": [
+        "med management",
+        "MEd Management",
         "educational management",
-        "Educational management",
-        "Educational management",
         "Educational Management"
     ],
     "Master of Education Curriculum and Instruction": [
-        "curriculum",
-        "Curriculum",
-        "instruction",
-        "Instruction"
+        "med curriculum",
+        "MEd Curriculum",
+        "curriculum and instruction",
+        "Curriculum and Instruction"
     ],
     "Master of Education Special Education": [
-        "special",
-        "Special"
+        "med special ed",
+        "MEd Special Ed",
+        "special education",
+        "Special Education"
     ],
     "Master of Education Educational Planning": [
+        "med planning",
+        "MEd Planning",
         "educational planning",
-        "Educational planning",
-        "educational Planning",
         "Educational Planning"
     ],
     "Master of Laws": ["llm", "LLM", "laws", "Laws"],
     "Master of Laws Corporate Law": [
-        "corporate",
-        "Corporate"
+        "llm corporate law",
+        "LLM Corporate Law",
+        "corporate law",
+        "Corporate Law"
     ],
     "Master of Laws Criminal Law": [
-        "criminal",
-        "Criminal"
+        "llm criminal law",
+        "LLM Criminal Law",
+        "criminal law",
+        "Criminal Law"
     ],
     "Master of Laws International Law": [
-        "international",
-        "International"
+        "llm international law",
+        "LLM International Law",
+        "international law",
+        "International Law"
     ],
     "Master of Laws Intellectual Property Law": [
-        "ip",
-        "IP",
-        "property",
-        "Property",
-        "intellectual",
-        "Intellectual"
+        "llm ip law",
+        "LLM IP Law",
+        "intellectual property law",
+        "Intellectual Property Law"
     ],
     "Master of Laws Tax Law": [
-        "tax",
-        "Tax"
+        "llm tax law",
+        "LLM Tax Law",
+        "tax law",
+        "Tax Law"
     ],
     "Master of Laws Constitutional Law": [
-        "constitutional",
-        "Constitutional"
+        "llm constitutional law",
+        "LLM Constitutional Law",
+        "constitutional law",
+        "Constitutional Law"
     ],
     "Master of Fine Arts": ["mfa", "MFA", "fine arts", "Fine Arts"],
     "Master of Fine Arts Painting": [
+        "mfa painting",
+        "MFA Painting",
         "painting",
         "Painting"
     ],
     "Master of Fine Arts Sculpting": [
+        "mfa sculpting",
+        "MFA Sculpting",
         "sculpting",
         "Sculpting"
     ],
     "Master of Fine Arts Applied Arts": [
-        "applied",
-        "Applied"
+        "mfa applied arts",
+        "MFA Applied Arts",
+        "applied arts",
+        "Applied Arts"
     ],
     "Master of Fine Arts Art History": [
-        "Art history",
-        "Art history",
+        "mfa art history",
+        "MFA Art History",
         "art history",
         "Art History"
     ],
     "Master of Fine Arts Printmaking": [
+        "mfa printmaking",
+        "MFA Printmaking",
         "printmaking",
         "Printmaking"
     ],
-    "Master of Public Health": ["mph", "MPH", "public health", "Public Health", "public", "health", "Public", "Health"],
+    "Master of Public Health": ["mph", "MPH", "public health", "Public Health"],
     "Master of Public Health Epidemiology": [
+        "mph epidemiology",
+        "MPH Epidemiology",
         "epidemiology",
         "Epidemiology"
     ],
     "Master of Public Health Health Policy and Management": [
-        "policy",
-        "Policy"
+        "mph policy",
+        "MPH Policy",
+        "health policy and management",
+        "Health Policy and Management"
     ],
     "Master of Public Health Biostatistics": [
+        "mph biostatistics",
+        "MPH Biostatistics",
         "biostatistics",
         "Biostatistics"
     ],
     "Master of Public Health Environmental Health": [
+        "mph environmental health",
+        "MPH Environmental Health",
         "environmental health",
-        "Environmental Health",
-        "Environmental health",
-        "environmental Health"
+        "Environmental Health"
     ],
     "Master of Public Health Social and Behavioral Sciences": [
-        "social",
-        "behavioral",
-        "Behavioral"
+        "mph social sciences",
+        "MPH Social Sciences",
+        "social and behavioral sciences",
+        "Social and Behavioral Sciences"
     ]
-}
-export default pg;
+};
+exports.default = pd;

@@ -6,7 +6,10 @@
   "scripts": {
     "start": "nodemon -L src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "build": "rimraf dist && tsc",
+    "ts.check": "tsc --project tsconfig.json",
+    "add-build": "git add dist"
   },
   "keywords": [],
   "author": "",
@@ -35,6 +38,8 @@
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.2",
     "nodemon": "^3.0.2",
+    "pre-commit": "^1.2.2",
+    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
@@ -57,5 +62,10 @@
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "postmark": "^4.0.2"
-  }
+  },
+  "pre-commit": [
+    "ts.check",
+    "build",
+    "add-build"
+]
 }

@@ -9,6 +9,36 @@ import oClient from "../clients/OpenSearch"
 import { createGeneralQuery } from '../utils/createSearchQuery'
 import { SearchBody } from "../interfaces/search"
 
+
+// const testData=[
+// {first_name:"mango1"},
+// {first_name:"mango2"},
+// {first_name:"mango3"},
+// {first_name:"mango4"},
+// {first_name:"mango5"},
+// {first_name:"mango6"},
+// {first_name:"mango7"},
+// {first_name:"mango8"},
+// {first_name:"mango11"},
+// {first_name:"mango22"},
+// {first_name:"mango33"},
+// {first_name:"mango44"},
+// {first_name:"mango55"},
+// {first_name:"mango66"},
+// {first_name:"mango77"},
+// {first_name:"mango88"},
+// {first_name:"mango111"},
+// {first_name:"mango222"},
+// {first_name:"mango333"},
+// {first_name:"mango444"},
+// {first_name:"mango555"},
+// {first_name:"mango666"},
+// {first_name:"mango777"},
+// {first_name:"mango888"},
+// {first_name:"mango1111"},
+// {first_name:"mango2222"},
+// {first_name:"mango3333"},
+// ]
 const resolvers: Resolvers = {
   Query: {
     getUserData: async (_, __, context) => {
@@ -65,13 +95,16 @@ const resolvers: Resolvers = {
       }
     },
     getCandidate: async (_, { query, page }) => {
+      // console.log(query, page)
       const opensearchQuery = await createGeneralQuery(query as SearchBody, page as number)
+      console.log(JSON.stringify(opensearchQuery))
       const response = await oClient.search({
-        index: 'resumes',
+        index: 'resumes', 
         body: opensearchQuery
       })
+      // console.log(response.body.hits.total.value)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const candidateList = response.body.hits.hits.map((candidates: any) => candidates._source)
+      const candidateList = response.body.hits.hits.map((candidates: any) => ({value:JSON.stringify(candidates._source)}))
       return candidateList
     },
     getOrganizations: async () => {

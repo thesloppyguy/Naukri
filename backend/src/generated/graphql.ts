@@ -23,25 +23,7 @@ export type ActivateInput = {
 
 export type Candidate = {
   __typename?: 'Candidate';
-  candidate_age?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Scalars['String']['output']>;
-  current_address?: Maybe<Scalars['String']['output']>;
-  date_of_birth?: Maybe<Scalars['String']['output']>;
-  education?: Maybe<Array<Maybe<Education>>>;
-  email?: Maybe<Scalars['String']['output']>;
-  employer_id?: Maybe<Scalars['String']['output']>;
-  file_name?: Maybe<Scalars['String']['output']>;
-  first_name?: Maybe<Scalars['String']['output']>;
-  fresher?: Maybe<Scalars['String']['output']>;
-  gender?: Maybe<Scalars['String']['output']>;
-  job_code_title?: Maybe<Scalars['String']['output']>;
-  job_id?: Maybe<Scalars['String']['output']>;
-  languages?: Maybe<Scalars['String']['output']>;
-  last_name?: Maybe<Scalars['String']['output']>;
-  permanent_address?: Maybe<Scalars['String']['output']>;
-  phone?: Maybe<Scalars['String']['output']>;
-  total_work_experience?: Maybe<Scalars['Int']['output']>;
-  work_experience?: Maybe<Array<Maybe<Work>>>;
+  value?: Maybe<Scalars['String']['output']>;
 };
 
 export type CandidateQuery = {
@@ -422,25 +404,7 @@ export type ResolversParentTypes = {
 };
 
 export type CandidateResolvers<ContextType = any, ParentType extends ResolversParentTypes['Candidate'] = ResolversParentTypes['Candidate']> = {
-  candidate_age?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  country?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  current_address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  date_of_birth?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  education?: Resolver<Maybe<Array<Maybe<ResolversTypes['Education']>>>, ParentType, ContextType>;
-  email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  employer_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  file_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  first_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  fresher?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  gender?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  job_code_title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  job_id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  languages?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  last_name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  permanent_address?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  phone?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  total_work_experience?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
-  work_experience?: Resolver<Maybe<Array<Maybe<ResolversTypes['Work']>>>, ParentType, ContextType>;
+  value?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

@@ -9,6 +9,7 @@ import { SubmitButton } from "../atoms/SubmitButton";
 
 const CandidateDetailsCard = ({ candidate, setSelected }: any) => {
   const theme = useTheme();
+  console.log(candidate);
   const resumeLines = candidate.review_body.split("\n");
   return (
     <Card

@@ -108,33 +108,6 @@ query getOrganizations {
 
 query getCandidate($query: CandidateQuery, $page: Int) {
   getCandidate(query: $query, page: $page) {
-    first_name
-    last_name
-    email
-    phone
-    date_of_birth
-    candidate_age
-    current_address
-    permanent_address
-    country
-    total_work_experience
-    work_experience {
-      company
-      designation
-      date_of_joining
-      date_of_leaving
-    }
-    education {
-      degree_name
-      degree_type
-      institute_name
-    }
-    employer_id
-    file_name
-    fresher
-    gender
-    job_code_title
-    job_id
-    languages
+    value
   }
 }

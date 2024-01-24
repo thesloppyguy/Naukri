@@ -24,25 +24,7 @@ export type ActivateInput = {
 
 export type Candidate = {
   __typename?: 'Candidate';
-  candidate_age?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Scalars['String']['output']>;
-  current_address?: Maybe<Scalars['String']['output']>;
-  date_of_birth?: Maybe<Scalars['String']['output']>;
-  education?: Maybe<Array<Maybe<Education>>>;
-  email?: Maybe<Scalars['String']['output']>;
-  employer_id?: Maybe<Scalars['String']['output']>;
-  file_name?: Maybe<Scalars['String']['output']>;
-  first_name?: Maybe<Scalars['String']['output']>;
-  fresher?: Maybe<Scalars['String']['output']>;
-  gender?: Maybe<Scalars['String']['output']>;
-  job_code_title?: Maybe<Scalars['String']['output']>;
-  job_id?: Maybe<Scalars['String']['output']>;
-  languages?: Maybe<Scalars['String']['output']>;
-  last_name?: Maybe<Scalars['String']['output']>;
-  permanent_address?: Maybe<Scalars['String']['output']>;
-  phone?: Maybe<Scalars['String']['output']>;
-  total_work_experience?: Maybe<Scalars['Int']['output']>;
-  work_experience?: Maybe<Array<Maybe<Work>>>;
+  value?: Maybe<Scalars['String']['output']>;
 };
 
 export type CandidateQuery = {
@@ -404,7 +386,7 @@ export type GetCandidateQueryVariables = Exact<{
 }>;
 
 
-export type GetCandidateQuery = { __typename?: 'Query', getCandidate?: Array<{ __typename?: 'Candidate', first_name?: string | null, last_name?: string | null, email?: string | null, phone?: string | null, date_of_birth?: string | null, candidate_age?: string | null, current_address?: string | null, permanent_address?: string | null, country?: string | null, total_work_experience?: number | null, employer_id?: string | null, file_name?: string | null, fresher?: string | null, gender?: string | null, job_code_title?: string | null, job_id?: string | null, languages?: string | null, work_experience?: Array<{ __typename?: 'Work', company?: string | null, designation?: string | null, date_of_joining?: string | null, date_of_leaving?: string | null } | null> | null, education?: Array<{ __typename?: 'Education', degree_name?: string | null, degree_type?: string | null, institute_name?: string | null } | null> | null } | null> | null };
+export type GetCandidateQuery = { __typename?: 'Query', getCandidate?: Array<{ __typename?: 'Candidate', value?: string | null } | null> | null };
 
 
 export const RegisterOrganizationDocument = gql`
@@ -1014,34 +996,7 @@ export type GetOrganizationsQueryResult = Apollo.QueryResult<GetOrganizationsQue
 export const GetCandidateDocument = gql`
     query getCandidate($query: CandidateQuery, $page: Int) {
   getCandidate(query: $query, page: $page) {
-    first_name
-    last_name
-    email
-    phone
-    date_of_birth
-    candidate_age
-    current_address
-    permanent_address
-    country
-    total_work_experience
-    work_experience {
-      company
-      designation
-      date_of_joining
-      date_of_leaving
-    }
-    education {
-      degree_name
-      degree_type
-      institute_name
-    }
-    employer_id
-    file_name
-    fresher
-    gender
-    job_code_title
-    job_id
-    languages
+    value
   }
 }
     `;

@@ -5,9 +5,7 @@ import Grid from "@mui/material/Grid";
 import JobCard from "../../molecules/JobCard";
 import Container from "@mui/material/Container";
 import Pagination from "@mui/material/Pagination";
-import axios from "axios";
 import Typography from "@mui/material/Typography";
-import { AnimatePresence, motion } from "framer-motion";
 import JobDetailsCard from "../../molecules/JobDetailsCard";
 import {
   useGetJobsLazyQuery,
@@ -48,17 +46,21 @@ const JobsView = () => {
     setPage(value);
   };
   const handleSubmit = () => {
-    setLoading(true);
-    getjob({
-      variables: {
-        query: search,
-      },
-    });
+    if (search !== "") {
+      setLoading(true);
+      getjob({
+        variables: {
+          query: search,
+        },
+      });
+    }
   };
   useEffect(() => {
-    setLoading(true);
-    getJobs();
-  }, []);
+    if (search === "") {
+      setLoading(true);
+      getJobs();
+    }
+  }, [getJobs, search]);
   return (
     <>
       {!selected ? (
@@ -67,6 +69,7 @@ const JobsView = () => {
             field={search}
             setField={setSearch}
             onSubmit={handleSubmit}
+            disabled={loading}
           />
           <Stack
             direction="row"
@@ -94,9 +97,9 @@ const JobsView = () => {
                       padding: "10px",
                     }}
                   >
-                    <motion.div onClick={() => setSelected(job)}>
+                    <div onClick={() => setSelected(job)}>
                       <JobCard job={job} />
-                    </motion.div>
+                    </div>
                   </Grid>
                 ))}
               </Grid>
