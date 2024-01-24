@@ -31,6 +31,11 @@ const InviteMember: FC = () => {
   });
   const [inviteUser] = useInviteUserMutation({
     onCompleted() {
+      setNotification({
+        message: "Invite Sent",
+        open: true,
+        type: "success",
+      });
       setLoading(false);
     },
     onError(error) {

@@ -208,7 +208,7 @@ const resolvers: Resolvers = {
         role,
         organization: organization
       })
-      sendInvite(newUser._id.toString(), email, 'activate')
+      await sendInvite(newUser._id.toString(), email, 'activate')
       return true
     },
     resetPasswordUser: async (_, { input }) => {
