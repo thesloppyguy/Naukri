@@ -11,6 +11,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const validateEnv_1 = __importDefault(require("../utils/validateEnv"));
 const OpenSearch_1 = __importDefault(require("../clients/OpenSearch"));
 const createSearchQuery_1 = require("../utils/createSearchQuery");
+const sendInvite_1 = require("../utils/sendInvite");
 // const testData=[
 // {first_name:"mango1"},
 // {first_name:"mango2"},
@@ -134,7 +135,6 @@ const resolvers = {
                 url,
                 status: 'Review'
             });
-            // await sendInvite()
             return true;
         },
         inviteOrganization: async (_, { input }) => {
@@ -200,13 +200,13 @@ const resolvers = {
             if (user) {
                 throw new graphql_1.GraphQLError("User already exists", { extensions: { code: 'CUSTOM_CODE_400' }, });
             }
-            await User_1.default.create({
+            const newUser = await User_1.default.create({
                 name,
                 email,
                 role,
                 organization: organization
             });
-            console.log("Send Invite");
+            await (0, sendInvite_1.sendInvite)(newUser._id.toString(), email, 'activate');
             return true;
         },
         resetPasswordUser: async (_, { input }) => {
