@@ -55,20 +55,23 @@ const resolvers = {
                     email: context.user.organization.contactEmail,
                     url: context.user.organization.url,
                     status: context.user.organization.status,
-                }
+                },
             };
         },
         getJob: async (_, { query }) => {
             const response = await OpenSearch_1.default.search({
                 index: 'jobs',
                 body: {
-                    "query": {
-                        "bool": {
-                            "should": [{ "match_phrase": { "job_id": query } }, { "match_phrase": { "job_code_title": query } }]
-                        }
+                    query: {
+                        bool: {
+                            should: [
+                                { match_phrase: { job_id: query } },
+                                { match_phrase: { job_code_title: query } },
+                            ],
+                        },
                     },
-                    "size": 200
-                }
+                    size: 200,
+                },
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const jobs = response.body.hits.hits.map((job) => job._source);
@@ -78,19 +81,19 @@ const resolvers = {
             const response = await OpenSearch_1.default.search({
                 index: 'jobs',
                 body: {
-                    "query": {
-                        "match_all": {}
+                    query: {
+                        match_all: {},
                     },
-                    "size": 200,
-                }
+                    size: 200,
+                },
             });
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const jobs = response.body.hits.hits.map((job) => job._source);
             return jobs;
         },
         getCount: async () => {
-            const resumes = await OpenSearch_1.default.count({ index: "resumes" });
-            const jobs = await OpenSearch_1.default.count({ index: "jobs" });
+            const resumes = await OpenSearch_1.default.count({ index: 'resumes' });
+            const jobs = await OpenSearch_1.default.count({ index: 'jobs' });
             return {
                 resume: resumes.body.count,
                 job: jobs.body.count,
@@ -102,11 +105,13 @@ const resolvers = {
             console.log(JSON.stringify(opensearchQuery));
             const response = await OpenSearch_1.default.search({
                 index: 'resumes',
-                body: opensearchQuery
+                body: opensearchQuery,
             });
             // console.log(response.body.hits.total.value)
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const candidateList = response.body.hits.hits.map((candidates) => ({ value: JSON.stringify(candidates._source) }));
+            const candidateList = response.body.hits.hits.map((candidates) => ({
+                value: JSON.stringify(candidates._source),
+            }));
             return candidateList;
         },
         getOrganizations: async () => {
@@ -115,25 +120,30 @@ const resolvers = {
             return list;
         },
         getUserByOrganization: async (_, __, context) => {
-            const userList = await User_1.default.find({ organization: context.user.organization._id }).exec();
+            const userList = await User_1.default.find({
+                organization: context.user.organization._id,
+            }).exec();
             const list = userList;
             return list;
-        }
+        },
     },
     Mutation: {
         registerOrganization: async (_, { input }) => {
             const name = input.name;
             const contactEmail = input.email;
             const url = input.url;
-            const existingOrganizations = await Organization_1.default.findOne({ name: name, contactEmail: contactEmail }).exec();
+            const existingOrganizations = await Organization_1.default.findOne({
+                name: name,
+                contactEmail: contactEmail,
+            }).exec();
             if (existingOrganizations !== null) {
-                throw new graphql_1.GraphQLError("Organization already taken. Please check your email for an Invite.", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Organization already taken. Please check your email for an Invite.', { extensions: { code: 'CUSTOM_CODE_400' } });
             }
             await Organization_1.default.create({
                 name,
                 contactEmail,
                 url,
-                status: 'Review'
+                status: 'Review',
             });
             return true;
         },
@@ -142,17 +152,21 @@ const resolvers = {
             const contactEmail = input.email;
             const url = input.url;
             if (name == '' || contactEmail == '') {
-                throw new graphql_1.GraphQLError("Paramenter Missing", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Paramenter Missing', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             const existingOrganizations = await Organization_1.default.findOne({ name });
             if (existingOrganizations !== null) {
-                throw new graphql_1.GraphQLError("Organization already taken.", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Organization already taken.', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             await Organization_1.default.create({
                 name,
                 contactEmail,
                 url,
-                status: 'Review'
+                status: 'Review',
             });
             // await sendInvite()
             return true;
@@ -161,7 +175,9 @@ const resolvers = {
             console.log(id);
             const org = await Organization_1.default.findById(id);
             if (!org) {
-                throw new graphql_1.GraphQLError("User not found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User not found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             await User_1.default.deleteMany({ organization: id });
             await Organization_1.default.deleteOne({ _id: id });
@@ -172,17 +188,22 @@ const resolvers = {
             const status = input.status;
             const organization = await Organization_1.default.findById(id);
             if (organization == null) {
-                throw new graphql_1.GraphQLError("Organization Not Found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Organization Not Found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             await Organization_1.default.updateOne({ _id: id }, { $set: { status: status } });
             if (status === 'Approved') {
-                const user = await User_1.default.findOne({ email: organization === null || organization === void 0 ? void 0 : organization.contactEmail, organization: organization === null || organization === void 0 ? void 0 : organization._id });
+                const user = await User_1.default.findOne({
+                    email: organization === null || organization === void 0 ? void 0 : organization.contactEmail,
+                    organization: organization === null || organization === void 0 ? void 0 : organization._id,
+                });
                 if (user == null) {
                     User_1.default.create({
                         name: organization === null || organization === void 0 ? void 0 : organization.name,
                         email: organization === null || organization === void 0 ? void 0 : organization.contactEmail,
-                        role: "Admin",
-                        organization: organization
+                        role: 'Admin',
+                        organization: organization,
                     });
                 }
             }
@@ -194,17 +215,21 @@ const resolvers = {
             const role = input.role;
             const organization = context.user.organization._id;
             if (name == '' || email == '') {
-                throw new graphql_1.GraphQLError("Parameter Missing", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Parameter Missing', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             const user = await User_1.default.findOne({ email });
             if (user) {
-                throw new graphql_1.GraphQLError("User already exists", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User already exists', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             const newUser = await User_1.default.create({
                 name,
                 email,
                 role,
-                organization: organization
+                organization: organization,
             });
             await (0, sendInvite_1.sendInvite)(newUser._id.toString(), email, 'activate');
             return true;
@@ -215,7 +240,9 @@ const resolvers = {
             const passwordHashed = await bcrypt_1.default.hash(passwordRaw, 10);
             const result = await User_1.default.updateOne({ _id: id }, { $set: { password: passwordHashed } });
             if (result.modifiedCount === 0) {
-                throw new graphql_1.GraphQLError("User not found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User not found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             return true;
         },
@@ -225,14 +252,18 @@ const resolvers = {
             const passwordHashed = await bcrypt_1.default.hash(passwordRaw, 10);
             const result = await User_1.default.updateOne({ _id: id }, { $set: { password: passwordHashed } });
             if (result.modifiedCount === 0) {
-                throw new graphql_1.GraphQLError("User not found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User not found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             return true;
         },
         deleteUser: async (_, { id }) => {
             const user = await User_1.default.findById(id);
             if (!user) {
-                throw new graphql_1.GraphQLError("User not found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User not found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             await User_1.default.deleteOne({ _id: id });
             return true;
@@ -242,7 +273,9 @@ const resolvers = {
             const role = input.role;
             const user = await User_1.default.findById(id);
             if (user == null) {
-                throw new graphql_1.GraphQLError("User not Found", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('User not Found', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             await User_1.default.updateOne({ _id: id }, { $set: { role: role } });
             return true;
@@ -250,26 +283,38 @@ const resolvers = {
         loginUser: async (_, { input: { organization, email, password } }) => {
             const org = await Organization_1.default.findOne({ name: organization });
             if (org == null) {
-                throw new graphql_1.GraphQLError("Invalid Organization", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Invalid Organization', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             const user = await User_1.default.findOne({
                 $and: [{ email: email }, { organization: org._id }],
-            }).populate('organization').exec();
+            })
+                .populate('organization')
+                .exec();
             if (user == null) {
-                throw new graphql_1.GraphQLError("Invalid Credentails", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Invalid Credentails', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             const match = await bcrypt_1.default.compare(password, user === null || user === void 0 ? void 0 : user.password);
             if (!match) {
-                throw new graphql_1.GraphQLError("Invalid Credentails", { extensions: { code: 'CUSTOM_CODE_400' }, });
+                throw new graphql_1.GraphQLError('Invalid Credentails', {
+                    extensions: { code: 'CUSTOM_CODE_400' },
+                });
             }
             if (user) {
-                const token = jsonwebtoken_1.default.sign(user.toJSON(), validateEnv_1.default.SESSION_SECRET, { expiresIn: process.env.TOKEN_EXPIRY_TIME });
+                const token = jsonwebtoken_1.default.sign(user.toJSON(), validateEnv_1.default.SESSION_SECRET, {
+                    expiresIn: process.env.TOKEN_EXPIRY_TIME,
+                });
                 return Object.assign(Object.assign({}, user.toJSON()), { userJwtToken: {
                         token: token,
                     } });
             }
-            throw new graphql_1.GraphQLError("Invalid Credintials", { extensions: { code: 'CUSTOM_CODE_400' }, });
+            throw new graphql_1.GraphQLError('Invalid Credintials', {
+                extensions: { code: 'CUSTOM_CODE_400' },
+            });
         },
-    }
+    },
 };
 exports.default = resolvers;

@@ -1,13 +1,17 @@
-FROM node:20.11
+FROM node:20.11 AS production
 
-ENV NODE_ENV development
+ENV NODE_ENV production
 
-WORKDIR /frontend
+WORKDIR /usr/src/app    
 
-COPY . .
+COPY package.json .
+COPY yarn.lock .
 
+RUN yarn global add typescript
 RUN yarn install
 
-EXPOSE 3000
+COPY . . 
 
-CMD [ "yarn", "start" ]
+RUN yarn build
+
+CMD ["node", "server.js"]

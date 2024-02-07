@@ -7,13 +7,13 @@ WORKDIR /usr/src/api
 
 COPY package.json .
 COPY yarn.lock .
+RUN yarn global add typescript
+RUN yarn install --production=false
 
-RUN yarn install --production=true
-
-RUN apt-get -q update && apt-get -qy install netcat
+RUN apt-get -q update && apt-get -qy install netcat-traditional
 
 COPY . .
 
 RUN yarn build 
 
-CMD ["sh", "-c", "yarn typeorm migration:run && yarn start:prod"]
+CMD ["sh", "-c", "yarn start:prod"]

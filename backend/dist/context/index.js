@@ -38,7 +38,9 @@ const context = async ({ req }) => {
     // try to retrieve a user with the token
     const user = await getUser(token);
     if (user == null) {
-        throw new graphql_1.GraphQLError('User Unauthorized', { extensions: { code: 'CUSTOM_CODE_401' }, });
+        throw new graphql_1.GraphQLError('User Unauthorized', {
+            extensions: { code: 'CUSTOM_CODE_401' },
+        });
     }
     // add the user to the context
     return { user };

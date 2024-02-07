@@ -41,7 +41,7 @@ const http_1 = __importDefault(require("http"));
 const context_1 = __importDefault(require("./context"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const port = validateEnv_1.default.PORT;
-const typeDefs = (0, graphql_import_1.importSchema)(path_1.default.join(__dirname, "/../schema.graphql"));
+const typeDefs = (0, graphql_import_1.importSchema)(path_1.default.join(__dirname, '/../schema.graphql'));
 const app = (0, express_1.default)();
 const httpServer = http_1.default.createServer(app);
 const server = new server_1.ApolloServer({
@@ -55,10 +55,10 @@ mongoose_1.default
     console.log('Mongoose connected');
     app.use((0, cors_1.default)({
         origin: validateEnv_1.default.DOMAIN_URL,
-        credentials: true
+        credentials: true,
     }));
     server.start().then(() => {
-        app.use("/graphql", (0, cors_1.default)(), bodyParser.json({ limit: '50mb' }), (0, express4_1.expressMiddleware)(server, {
+        app.use('/graphql', (0, cors_1.default)(), bodyParser.json({ limit: '50mb' }), (0, express4_1.expressMiddleware)(server, {
             context: context_1.default,
         }));
         httpServer.listen({ port: port }, () => {
