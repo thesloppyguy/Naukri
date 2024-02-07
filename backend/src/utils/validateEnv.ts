@@ -1,5 +1,5 @@
-import { cleanEnv } from 'envalid'
-import { port, str } from 'envalid/dist/validators'
+import { cleanEnv } from 'envalid';
+import { port, str } from 'envalid/dist/validators';
 
 export default cleanEnv(process.env, {
   MONGO_CONNECTION_STRING: str(),
@@ -13,4 +13,4 @@ export default cleanEnv(process.env, {
   DOMAIN_URL: str(),
   EMAIL_URL: str(),
   POSTMARK_KEY: str(),
-})
+});

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import env from '../utils/validateEnv'
+import env from '../utils/validateEnv';
 import { Request, Response } from 'express';
 import { GraphQLError } from 'graphql';
 
@@ -15,8 +15,7 @@ const getUser = async (token: string) => {
   }
 };
 
-const context = async ({ req }: { req: Request, res: Response }) => {
-
+const context = async ({ req }: { req: Request; res: Response }) => {
   //   console.log(req.body.operationName);
   if (req.body.operationName === 'IntrospectionQuery') {
     // console.log('blocking introspection query..');
@@ -40,7 +39,9 @@ const context = async ({ req }: { req: Request, res: Response }) => {
   // try to retrieve a user with the token
   const user = await getUser(token);
   if (user == null) {
-    throw new GraphQLError('User Unauthorized', { extensions: { code: 'CUSTOM_CODE_401' }, });
+    throw new GraphQLError('User Unauthorized', {
+      extensions: { code: 'CUSTOM_CODE_401' },
+    });
   }
 
   // add the user to the context

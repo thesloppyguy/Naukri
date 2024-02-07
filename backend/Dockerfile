@@ -1,13 +1,19 @@
-FROM node:20.11
+FROM node:20.11 AS production
 
-ENV NODE_ENV development
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
 
-WORKDIR /backend
+WORKDIR /usr/src/api
+
+COPY package.json .
+COPY yarn.lock .
+
+RUN yarn install --production=true
+
+RUN apt-get -q update && apt-get -qy install netcat
 
 COPY . .
 
-RUN yarn install
+RUN yarn build 
 
-EXPOSE 5000
-
-CMD [ "yarn", "start" ]
+CMD ["sh", "-c", "yarn typeorm migration:run && yarn start:prod"]
